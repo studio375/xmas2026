@@ -7,7 +7,6 @@ import { EventBus } from './game/EventBus';
 import { ClueVariable, GAME_DATA } from './helpers/gameData';
 import ClueBoard from './components/clue board/clueBoard'
 
-
 function getClue(usedClues:number[]){
     const possibleClues = GAME_DATA.clues.filter((elem:ClueVariable) => {
         return !usedClues.includes(elem.id);

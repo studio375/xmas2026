@@ -4,12 +4,13 @@ import Image from "next/image";
 import ArcadeText from "../arcadeText";
 import Button from "../button";
 import React, { useState } from "react";
+import PlayersGallery from "./playersGallery";
 
 
 
 export default function ChoosePlayer(){
     const {gameStep, setGameStep, setSelectedPlayer} : any = useStore();
-    const [character, setCharacter] = useState <Character | null>(null);
+    const [character, setCharacter] = useState <Character>(GAME_DATA.characters[0]);
     const {clues, setClues} : any = useStore();
     const [usedClues, setUsedClues] = useState<number[]>([]);
 
@@ -38,17 +39,16 @@ export default function ChoosePlayer(){
         }
         setClues(currentClues);
     };
-    return <section className="flex flex-col items-center gap-10">
+
+    return <section className="flex flex-col items-center gap-10 w-screen px-[5vw] relative">
         <ArcadeText>Seleziona un personaggio</ArcadeText>
-        <div className="flex items-stretch gap-10">
-            {
-                GAME_DATA.characters.map((elem:Character, i:number) => {
-                    return <div key={i} className={`flex flex-col items-center gap-1 p-2 cursor-pointer ${character==elem && 'border-[2px] border-[var(--arcade-color)]'}`} onClick={() => setCharacter(elem)}>
-                        <Image className="h-15 w-auto" src={elem.chooseImg} width={400} height={100} alt={elem.name} />
-                        <ArcadeText Tag="span">{elem.name}</ArcadeText>
-                    </div>
-                })
-            }
+        <div className="flex items-center w-full relative justify-between">
+            <PlayersGallery characters={GAME_DATA.characters} onSlideChange={(char:Character) => {setCharacter(char)}} />
+            <div className="w-[35%] h-40 bg-white p-5">
+                <ArcadeText addClassName="text-[#000] text-[20px]">{character.name}</ArcadeText>
+                <ArcadeText Tag={'span'} addClassName="text-[#000] text-[13px] mt-1 block">{character.role}</ArcadeText>
+                <ArcadeText Tag={'span'} addClassName="text-[#000] text-[12px] mt-2 block">{character.description}</ArcadeText>
+            </div>
         </div>
         <Button onClick={handleChoose} className={`${character == null && 'disabled'}`}>Start game</Button>
     </section>
