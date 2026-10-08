@@ -1,4 +1,4 @@
-import Phaser from 'phaser';
+import Phaser, {Input} from 'phaser';
 import { Character } from '@/helpers/gameData';
 import { ASSET_KEYS } from '@/helpers/assets';
 import { GAME_CONFIG } from '@/helpers/gameConfig';
@@ -8,6 +8,10 @@ export class PlayerController
 {
     sprite: Phaser.Physics.Arcade.Sprite;
     cursors: Phaser.Types.Input.Keyboard.CursorKeys;
+    keyA:any;
+    keyS:any;
+    keyD:any;
+    keyW:any;
 
     constructor(private scene: Phaser.Scene, private character: Character) {}
 
@@ -15,13 +19,17 @@ export class PlayerController
     {
         this.sprite = this.scene.physics.add.sprite(0, 350, ASSET_KEYS.dude);
         this.sprite.setCollideWorldBounds(true);
-        this.sprite.setScale(this.character.name === 'Rams' ? 0.5 : 1.5);
+        this.sprite.setScale(0.5);
         this.sprite?.body?.setGravityY(GAME_CONFIG.playerGravityY);
         this.sprite.body?.updateFromGameObject();
 
         this.createAnimations();
 
         this.cursors = this.scene.input.keyboard!.createCursorKeys();
+        this.keyA = this.scene.input.keyboard?.addKey(Input.Keyboard.KeyCodes.A);
+        this.keyS = this.scene.input.keyboard?.addKey(Input.Keyboard.KeyCodes.S);
+        this.keyD = this.scene.input.keyboard?.addKey(Input.Keyboard.KeyCodes.D);
+        this.keyW = this.scene.input.keyboard?.addKey(Input.Keyboard.KeyCodes.W);
     }
 
     private createAnimations()
@@ -49,12 +57,12 @@ export class PlayerController
 
     update()
     {
-        if (this.cursors.left.isDown)
+        if (this.cursors.left.isDown || this.keyA.isDown)
         {
             this.sprite.setVelocityX(-GAME_CONFIG.playerSpeed);
             this.sprite.anims.play('left', true);
         }
-        else if (this.cursors.right.isDown)
+        else if (this.cursors.right.isDown || this.keyD.isDown)
         {
             this.sprite.setVelocityX(GAME_CONFIG.playerSpeed);
             this.sprite.anims.play('right', true);
@@ -65,7 +73,7 @@ export class PlayerController
             this.sprite.anims.play('turn');
         }
 
-        if ((this.cursors.up.isDown || this.cursors.space.isDown) && this.sprite.body?.touching.down)
+        if ((this.cursors.up.isDown || this.cursors.space.isDown || this.keyW.isDown) && this.sprite.body?.touching.down)
         {
             this.sprite.setVelocityY(GAME_CONFIG.jumpVelocity);
         }

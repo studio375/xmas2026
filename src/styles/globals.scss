@@ -8,6 +8,7 @@
 @theme inline {
     --font-press: var(--font-press);
     --font-marker: var(--font-marker);
+    --font-fuzzy: var(--font-fuzzy);
 
     //responsive
     // --breakpoint-2xl: 2000px;
@@ -32,13 +33,17 @@ body {
 .font-marker{
     font-family: var(--font-marker);
 }
+.font-fuzzy{
+    font-family: var(--font-fuzzy);
+}
 
 .button-style {
-    display: inline-block; padding: 12px 24px; border: 3px solid #a16207; border-radius: 10px; background: #facc15; color: #713f12; font-size: 14px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; box-shadow: 0 6px 0 #a16207; transition: transform 0.1s ease, box-shadow 0.1s ease;
-    &:hover {background: #fde047;}
-    &:active {transform: translateY(5px);box-shadow: 0 1px 0 #a16207;}
-    &:focus-visible {outline: 2px solid #a16207;outline-offset: 3px;}
-    &.disabled{opacity: 0.3; pointer-events: none;}
+    display: inline-block; padding: 12px 28px; border: 3px solid #14532d; border-radius: 10px; background: repeating-linear-gradient(-45deg, #dc2626 0 12px, #c81e1e 12px 24px); color: #fff; font-size: 14px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; text-shadow: 0 2px 0 #14532d; cursor: pointer; box-shadow: 0 6px 0 #14532d, inset 0 0 0 2px #facc15; transition: transform 0.1s ease, box-shadow 0.1s ease, filter 0.1s ease;
+    &::after {content: "❄"; position: absolute; top: -9px; right: 0px; font-size: 16px; color: #fff; text-shadow: 0 0 4px #14532d; pointer-events: none;}
+    &:hover {filter: brightness(1.12);}
+    &:active {transform: translateY(5px); box-shadow: 0 1px 0 #14532d, inset 0 0 0 2px #facc15; }
+    &:focus-visible {outline: 2px solid #facc15; outline-offset: 3px; }
+    &.disabled {opacity: 0.3; pointer-events: none; }
 }
 
 #app {
@@ -52,7 +57,7 @@ body {
 
 
 .clue {
-    width:300px; height:300px; background:#ffa; overflow:hidden; padding:20px; border-radius:0 0 0 30px/45px; line-height:1.7em; font-size:30px; color:#130d6b;
+    width:350px; height:350px; background:#ffa; overflow:hidden; padding:20px; border-radius:0 0 0 30px/45px; line-height:1.7em; font-size:25px; color:#130d6b;
     box-shadow: inset 0 -40px 40px rgba(0,0,0,0.2), inset 0 25px 10px rgba(0,0,0,0.2), 0 5px 6px 5px rgba(0,0,0,0.2);
     -webkit-mask-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC);
     

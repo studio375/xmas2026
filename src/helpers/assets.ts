@@ -1,5 +1,4 @@
-export const ASSET_KEYS = {
-    sky: 'sky',
+export const ASSET_KEYS : any = {
     ground: 'ground',
     ground2: 'ground-2',
     base: 'base',
@@ -16,19 +15,19 @@ export const ASSET_KEYS = {
     christmas_tree: 'christmas-tree'
 };
 
-export const ASSET_PATHS = {
-    sky: 'sky.png',
+export const ASSET_PATHS : any = {
     ground: '/platforms/platform_01.png',
     ground2: '/platforms/platform_02.png',
     base: '/platforms/terreno_03.png',
-    star: 'star.png',
-    bomb: 'palla.png',
+    star: '/game-components/star.png',
+    bomb: '/game-components/palla.png',
     gameOver: 'game-over.png',
-    cube: 'cube.png',
+    cube: '/cubes/cube.png',
     emptyCube: '/cubes/cubo_nudo.png',
     emptyCube2: '/cubes/cubo.png',
-    heart: 'heart.png',
-    emptyHeart: 'empty-heart.png',
-    collectible: 'fish.png',
-    christmas_tree:'christmas-tree.png'
+    heart: '/assets/overlay-elements/heart.png',
+    emptyHeart: '/assets/overlay-elements/empty-heart.png',
+    collectible: '/game-components/fish.png',
+    christmas_tree:'/bg-elements/christmas-tree.png',
+    hamburger_menu:'/assets/overlay-elements/hamburger-menu.svg'
 };

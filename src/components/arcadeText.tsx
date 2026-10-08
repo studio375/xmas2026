@@ -1,10 +1,11 @@
-import React from "react"
+import React from "react";
+import parse from 'html-react-parser';
 
-interface AracadeTextProps{
+interface ArcadeTextProps{
     Tag?:React.ElementType,
-    children:React.ReactNode,
+    children:any,
     addClassName?:string
 }
-export default function ArcadeText({Tag = 'h2', addClassName, children}:AracadeTextProps){
-    return <Tag className={`font-press ${addClassName}`}>{children}</Tag>
+export default function ArcadeText({Tag = 'h2', addClassName, children}:ArcadeTextProps){
+    return <Tag className={`font-press ${addClassName}`}>{parse(children)}</Tag>
 }

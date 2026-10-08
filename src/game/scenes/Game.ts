@@ -51,15 +51,15 @@ export class Game extends Scene
     {
         this.load.setPath('assets');
         (Object.keys(ASSET_PATHS) as (keyof typeof ASSET_PATHS)[]).forEach((key) => {
-            if((key as string)!='dude')
+            if((key as string)!='dude' && ASSET_PATHS[key].indexOf('overlay-elements')==-1)
                 this.load.image(ASSET_KEYS[key], ASSET_PATHS[key]);
         });
         this.load.spritesheet(
             ASSET_KEYS.dude,
-            this.selectedPlayerObject.spriteImg.replace('/assets', ''),
+            `/characters/${this.selectedPlayerObject.name}/${(this.selectedPlayerObject.name).toLowerCase()}-sprite.png`,
             {
-                frameWidth: this.selectedPlayerObject.name === 'Rams' ? 98 : 32,
-                frameHeight: this.selectedPlayerObject.name === 'Rams' ? 190 : 48
+                frameWidth: (this.selectedPlayerObject.frameWidth)?this.selectedPlayerObject.frameWidth:98,
+                frameHeight: (this.selectedPlayerObject.frameHeight)?this.selectedPlayerObject.frameHeight:190
             }
         );
     }
@@ -84,18 +84,15 @@ export class Game extends Scene
         this.floorAndPlatforms = new FloorAndPlatforms(this);
         this.floorAndPlatforms.create();
         const worldWidth = this.floorAndPlatforms.getTotalWidth(this.floorAndPlatforms.floor);
-        this.physics.world.setBounds(0, 0, worldWidth, this.sys.scale.height * 2);
+        this.physics.world.setBounds(0, -this.sys.scale.height, worldWidth, this.sys.scale.height * 2);
 
         // omino
         this.playerController = new PlayerController(this, this.selectedPlayerObject);
         this.playerController.create();
 
         // camera
-        this.camera.setBounds(0, 0, worldWidth, this.sys.scale.height, true);
-        this.camera.startFollow(this.playerController.sprite, true, 1, 0);
-
-        // score
-        this.scoreText = this.add.text(16, 16, 'Vite recuperabili: 3', { fontSize: '32px', color: '#000' }).setOrigin(0, 0).setScrollFactor(0);
+        this.camera.setBounds(0, -this.sys.scale.height, worldWidth, this.sys.scale.height*2, true);
+        this.camera.startFollow(this.playerController.sprite, true, 1, 0.05);
 
         // stelle
         this.starManager = new StarManager(
@@ -103,7 +100,7 @@ export class Game extends Scene
             () => {
                 if(this.starManager.score == 3){
                     this.livesManager.livesCounter+=1;
-                    this.livesManager.update();
+                    EventBus.emit('update-lives', this.livesManager.livesCounter)
                     this.bombManager.addBomb();
                     this.starManager.score = 0;
                 }
@@ -125,7 +122,6 @@ export class Game extends Scene
 
         // lives
         this.livesManager = new LivesManager(this);
-        this.livesManager.create();
 
         // bombe
         this.bombManager = new BombManager(this, this.playerController.sprite);
@@ -180,7 +176,7 @@ export class Game extends Scene
             (a, b) => this.collectibleManager.collect(a, b),
             undefined,
             this
-        ); // stella - player
+        ); // collezionabile - player
 
 
         //HELPER
@@ -200,6 +196,12 @@ export class Game extends Scene
         //END HELPER
 
         this.dynamicBg(worldWidth);
+
+
+        EventBus.on('open-menu', (isOpen:boolean) => {
+            if(isOpen) this.game.pause();
+            else this.game.resume();
+        })
     }
 
     update()
@@ -228,7 +230,7 @@ export class Game extends Scene
                 this.starManager.spawnStarAt(x, (Math.random() - 0.4)*this.sys.scale.height);
             }
             this.livesManager.recoveredLives++;
-            this.scoreText.setText(`Vite recuperabili: ${(GAME_CONFIG.maxRecoverableLives - this.livesManager.recoveredLives)}`)
+            EventBus.emit('recovered-life', this.livesManager.recoveredLives);
         }
 
         setTimeout(() => {
@@ -243,7 +245,7 @@ export class Game extends Scene
         this.playerController.sprite.setTint(0xff0000);
         this.playerController.sprite.anims.play('turn');
         this.gameOver = true;
-        this.add.image(window.innerWidth / 2, window.innerHeight / 2, ASSET_KEYS.gameOver).setScale(0.3).setScrollFactor(0);
+        EventBus.emit('game-over');
     }
 
     dynamicBg(worldWidth:number){

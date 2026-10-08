@@ -41,6 +41,6 @@ export const GAME_POSITIONS = {
     ],
 
     untouchableElements: [
-        {x:0, y:-10, key: 'christmas_tree', scale: 0.7}
+        {x:0, y:0, key: 'christmas_tree'}
     ]
 }

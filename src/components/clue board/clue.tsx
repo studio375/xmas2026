@@ -29,9 +29,9 @@ export default function Clue({obj, onlyPostIT = false, className, index=0}:clueP
             <span className="font-marker">{obj.text}</span>
         </div> 
     }
-    return <div ref={ref} className="fixed w-30 h-30 z-2 top-0 left-0 flex flex-col gap-5 justify-center items-center">
+    return <div ref={ref} className="fixed w-35 h-35 z-2 top-0 left-0 flex flex-col gap-5 justify-center items-center">
         <div className="absolute left-0 top-0 w-screen h-screen bg-[#000000aa]" ref={bgRef}></div>
-        <div className="clue absolute left-[calc(50vw-150px)] top-[calc(50vh-150px)]" ref={postItRef}>
+        <div className="clue w-full h-full absolute left-[calc(50vw-175px)] top-[calc(50vh-175px)]" ref={postItRef}>
             <span className="font-marker">{obj.text}</span>
         </div>
         <Button className="absolute left-[50vw] top-[calc(100vh-120px)] -translate-x-1/2 z-1" ref={btnRef} onClick={handleClickButton}>Avanti</Button>

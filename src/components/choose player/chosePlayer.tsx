@@ -5,19 +5,20 @@ import ArcadeText from "../arcadeText";
 import Button from "../button";
 import React, { useState } from "react";
 import PlayersGallery from "./playersGallery";
+import PlayerDescription from "./playerDescription";
 
 
 
 export default function ChoosePlayer(){
     const {gameStep, setGameStep, setSelectedPlayer} : any = useStore();
     const [character, setCharacter] = useState <Character>(GAME_DATA.characters[0]);
-    const {clues, setClues} : any = useStore();
+    const {clues, setClues, guilty, setGuilty} : any = useStore();
     const [usedClues, setUsedClues] = useState<number[]>([]);
 
-    const pickRandomClue = (used: number[]) => {
+    const pickRandomClue = (used: number[], guiltyId:number) => {
 
-        const possibleClues = GAME_DATA.clues.filter((elem: ClueVariable) => {
-            return !used.includes(elem.id);
+        const possibleClues = GAME_DATA.clues.filter((elem: ClueVariable, ) => {
+            return (!used.includes(elem.id) && elem.suspected.includes(guiltyId));
         });
     
         return possibleClues[Math.floor(Math.random() * possibleClues.length)];
@@ -26,17 +27,27 @@ export default function ChoosePlayer(){
     const handleChoose = () => {
         setGameStep('start');
         setSelectedPlayer(character);
+        var guilty = null;
+        while(!guilty){
+            var randomChar = GAME_DATA.characters[Math.floor(Math.random() * GAME_DATA.characters.length)];
+            if(randomChar.id !== character.id)
+                guilty = randomChar;
+        }
+        setGuilty(guilty);
         const currentClues: ClueVariable[] = [];
         const newUsedClues:number[] = [];
         for (let index = 0; index < 3; index++) {
     
-            const newClue = pickRandomClue(newUsedClues);
+            const newClue = pickRandomClue(newUsedClues, guilty.id);
     
             if (newClue) {
                 currentClues.push(newClue);
                 newUsedClues.push(newClue.id);
             }
         }
+        console.log('il colpevole è '+guilty.name);
+        currentClues.sort((a,b) => a.exclusivityLevel - b.exclusivityLevel);
+        console.log(currentClues);
         setClues(currentClues);
     };
 
@@ -44,11 +55,7 @@ export default function ChoosePlayer(){
         <ArcadeText>Seleziona un personaggio</ArcadeText>
         <div className="flex items-center w-full relative justify-between">
             <PlayersGallery characters={GAME_DATA.characters} onSlideChange={(char:Character) => {setCharacter(char)}} />
-            <div className="w-[35%] h-40 bg-white p-5">
-                <ArcadeText addClassName="text-[#000] text-[20px]">{character.name}</ArcadeText>
-                <ArcadeText Tag={'span'} addClassName="text-[#000] text-[13px] mt-1 block">{character.role}</ArcadeText>
-                <ArcadeText Tag={'span'} addClassName="text-[#000] text-[12px] mt-2 block">{character.description}</ArcadeText>
-            </div>
+            <PlayerDescription character={character} />
         </div>
         <Button onClick={handleChoose} className={`${character == null && 'disabled'}`}>Start game</Button>
     </section>

@@ -1,6 +1,7 @@
 import { ASSET_KEYS } from '@/helpers/assets';
 import { GAME_CONFIG } from '@/helpers/gameConfig';
 import Phaser, { Math as PhaserMath } from 'phaser';
+import { EventBus } from '../EventBus';
 
 
 export class CollectibleManager
@@ -8,7 +9,6 @@ export class CollectibleManager
     collectibles: Phaser.Physics.Arcade.Group;
     counter = 0;
     counterLimit = 3;
-    collectiblesImages: Phaser.GameObjects.Image[] = [];
 
     constructor(
         private scene: Phaser.Scene,
@@ -21,16 +21,6 @@ export class CollectibleManager
         this.collectibles = this.scene.physics.add.group({
             bounceY: 0.4
         });
-        for (let index = 0; index < this.counterLimit; index++)
-        {
-            const texture = ASSET_KEYS.collectible;
-            const scale = 0.04;
-            const collectibleWidth = this.scene.textures.get(texture).get().width * scale;
-            const y = 60;
-            const x = (this.scene.sys.scale.width - 16) - (index * (collectibleWidth + 5));
-            const coll = this.scene.add.image(x, y, texture).setOrigin(1, 0).setScrollFactor(0).setScale(scale).setVisible(false);
-            this.collectiblesImages.push(coll);
-        }
     }
 
     collect(player: any, coll: any)
@@ -43,16 +33,8 @@ export class CollectibleManager
             this.onClueScore();
             this.counter = 0;
         }
-        this.update();
-    }
-
-    update(){
-        this.collectiblesImages.forEach((img:Phaser.GameObjects.Image, i:number)=> {
-            if(i<this.counter)
-                img.setVisible(true);
-            else
-                img.setVisible(false);
-        })
+        console.log(this.counter);
+        EventBus.emit('props-count-update', this.counter);
     }
 
     spawnCollectibleAt(x: number, y: number)

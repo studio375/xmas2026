@@ -17,9 +17,9 @@ export class CubeManager
         this.cubes = this.scene.physics.add.staticGroup();
         GAME_POSITIONS.cubes.forEach(elem => {
             if(elem.hasProp)
-                this.cubes.create(elem.x,  floorStart - elem.y, ASSET_KEYS.cube).setScale(0.08).setOrigin(0,1).refreshBody().setData('has-prop', true);
+                this.cubes.create(elem.x,  floorStart - elem.y, ASSET_KEYS.cube).setOrigin(0,1).refreshBody().setData('has-prop', true);
             else{
-                this.cubes.create(elem.x, floorStart - elem.y, ASSET_KEYS.emptyCube2).setScale(0.08).setOrigin(0,1).refreshBody();
+                this.cubes.create(elem.x, floorStart - elem.y, ASSET_KEYS.emptyCube2).setOrigin(0,1).refreshBody();
             }
         })
     }

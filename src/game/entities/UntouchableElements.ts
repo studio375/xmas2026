@@ -7,7 +7,7 @@ export class UntouchableElements{
     create(){
         this.elements = this.scene.physics.add.staticGroup();
         GAME_POSITIONS.untouchableElements.forEach(elem => {
-            this.elements.create(elem.x, this.scene.registry.get('floor-start')-elem.y, (ASSET_KEYS as keyof object)[elem.key]).setOrigin(0,1).setScale(elem.scale);
+            this.elements.create(elem.x, this.scene.registry.get('floor-start')-elem.y, (ASSET_KEYS as keyof object)[elem.key]).setOrigin(0,1);
         });
     }
 }

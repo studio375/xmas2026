@@ -25,7 +25,7 @@ export default function PlayersGallery({characters, onSlideChange}:PlayersGaller
                 grabCursor={true}
                 loop={true} 
                 loopAdditionalSlides={1}
-                slidesPerView={3}
+                slidesPerView={2}
                 navigation={true}
                 pagination={true}
                 onInit={(swiper) => {ref.current = swiper;}}
@@ -36,8 +36,8 @@ export default function PlayersGallery({characters, onSlideChange}:PlayersGaller
         {
             characters.map((character) => {
                 return <SwiperSlide key={character.id} className="[&:not(.swiper-slide-active)]:!opacity-50">
-                    <div className="relative flex flex-col items-center">
-                        <Image className="h-15 w-auto" src={character.chooseImg} width={400} height={100} alt={character.name} />
+                    <div className="relative flex flex-col items-center gap-3">
+                        <Image className="h-25 w-auto" src={`/assets/characters/${character.name}/${(character.name).toLowerCase()}-front.png`} width={400} height={100} alt={character.name} />
                         <ArcadeText Tag="span">{character.name}</ArcadeText>
                     </div>
                 </SwiperSlide>
