@@ -40,7 +40,7 @@ This template has been updated for:
 - The day/night background uses a scene-owned Phaser tween and draws only the viewport, skipping unchanged colors. Damage invulnerability uses the scene clock, so its timer stops while the game is paused.
 - The board texture is a separate [PNG asset](./public/assets/bg-elements/clue-board.png), rather than a large base64 string embedded in the global stylesheet, so it can load on demand and be cached independently.
 
-For validation, run `npm run typecheck`, `npm test` and `npm run build-nolog`. The build currently reports that ESLint is missing; a successful build is not a lint result.
+For validation, run `npm run typecheck`, `npm test` and `npm run build-nolog`. The build also runs ESLint: Next.js 15.3.1 uses ESLint 9 with the legacy `.eslintrc.json` configuration and the matching `eslint-config-next` package. ESLint 10 is not compatible with this setup. Commit `package-lock.json` with dependency changes and use `npm ci` in deployment to install the locked versions.
 For frame-rate comparisons, serve the production export in `dist` rather than the development server and profile it on the target device. The rendering changes do not establish an FPS improvement without measurements.
 
 ## Writing Code
