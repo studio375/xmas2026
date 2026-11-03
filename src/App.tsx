@@ -36,9 +36,11 @@ function App()
             EventBus.removeListener('show-clue', handleShowClue);
         }
     }, [clueIndex, clues, paused])
-    useEffect(() => {
-        if (gameStep === 'choose player') setShowClue(false);
-    }, [gameStep]);
+    useEffect(() => useStore.subscribe((state, previousState) => {
+        if (state.gameStep === 'choose player' && state.gameStep !== previousState.gameStep) {
+            setShowClue(false);
+        }
+    }), []);
     const handleCloseBoard = () => {
         const newIndex = showClue ? clueIndex + 1 : clueIndex;
         setShowClue(false); 

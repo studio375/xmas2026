@@ -7,14 +7,14 @@ This is a Phaser project template that uses the Next.js framework. It includes a
 This template has been updated for:
 
 - [Phaser 4](https://github.com/phaserjs/phaser)
-- [Next.js 15.3.1](https://github.com/vercel/next.js)
+- [Next.js 16.4.4](https://github.com/vercel/next.js)
 - [TypeScript 5](https://github.com/microsoft/TypeScript)
 
 ![screenshot](screenshot.png)
 
 ## Requirements
 
-[Node.js](https://nodejs.org) is required to install dependencies and run scripts via `npm`.
+[Node.js](https://nodejs.org) 20.9 or later is required by Next.js. Node.js 22.17 or later is recommended to also run the regression tests. Use the same Node major version locally and in deployment.
 
 ## Available Commands
 
@@ -26,6 +26,7 @@ This template has been updated for:
 | `npm run dev-nolog` | Launch a development web server without sending anonymous data (see "About log.js" below) |
 | `npm run build-nolog` | Create a production build in the `dist` folder without sending anonymous data (see "About log.js" below) |
 | `npm run typecheck` | Check all TypeScript sources without generating files |
+| `npm run lint` | Run ESLint with the Next.js flat configuration |
 | `npm test` | Run state and restart regression tests (Node.js 22.17 or later) |
 
 ## Xmas 2026 gameplay and maintenance
@@ -40,7 +41,7 @@ This template has been updated for:
 - The day/night background uses a scene-owned Phaser tween and draws only the viewport, skipping unchanged colors. Damage invulnerability uses the scene clock, so its timer stops while the game is paused.
 - The board texture is a separate [PNG asset](./public/assets/bg-elements/clue-board.png), rather than a large base64 string embedded in the global stylesheet, so it can load on demand and be cached independently.
 
-For validation, run `npm run typecheck`, `npm test` and `npm run build-nolog`. The build also runs ESLint: Next.js 15.3.1 uses ESLint 9 with the legacy `.eslintrc.json` configuration and the matching `eslint-config-next` package. ESLint 10 is not compatible with this setup. Commit `package-lock.json` with dependency changes and use `npm ci` in deployment to install the locked versions.
+For validation, run `npm run typecheck`, `npm test` and `npm run build-nolog`. The build script explicitly runs ESLint before Next.js, since Next.js 16 no longer runs lint automatically. ESLint 9 uses [the flat configuration](./eslint.config.mjs) and `eslint-config-next` matches Next.js 16.4.4. Phaser remains at 4.0.0. Commit `package-lock.json` with dependency changes and use `npm ci` in deployment to install the locked versions. The static export remains in `dist`.
 For frame-rate comparisons, serve the production export in `dist` rather than the development server and profile it on the target device. The rendering changes do not establish an FPS improvement without measurements.
 
 ## Writing Code
