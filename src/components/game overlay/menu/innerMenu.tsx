@@ -14,7 +14,10 @@ export default function InnerMenu(){
         <div className="flex flex-col items-center gap-3">
             <ArcadeText addClassName="text-[35px]">Menu</ArcadeText>
             <Button onClick={handleOnClickClues}>Indizi</Button>
-            <Button disabled title="Funzione non ancora disponibile">Sospettati</Button>
+            <Button onClick={() => {
+                setShowComponents(['suspected']);
+                setMenuOpen(false);
+            }}>Sospettati</Button>
             <Button onClick={resetGame}>Ricomincia</Button>
             <Button autoFocus onClick={() => setMenuOpen(false)}>Indietro</Button>
         </div>

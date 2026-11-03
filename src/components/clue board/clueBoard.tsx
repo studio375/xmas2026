@@ -1,7 +1,8 @@
 import Board from "./board";
-import Clue from "./clue";
 import { useStore } from "@/store/useStore";
 import Image from "next/image";
+import { useLayoutEffect, useRef, useState } from "react";
+import CluePreview from "./cluePreview";
 
 interface ClueBoardProps {
     handleClickButton: () => void;
@@ -11,9 +12,38 @@ interface ClueBoardProps {
 export default function ClueBoard({handleClickButton, openedByMenu = false}: ClueBoardProps){
     const clues = useStore(state => state.clues);
     const clueIndex = useStore(state => state.clueIndex);
-    return <div role="dialog" aria-modal="true" aria-label="Lavagna degli indizi" className="fixed top-0 left-0 w-screen h-dvh bg-[#000000aa] flex flex-col gap-5 justify-center items-center px-[10vw] py-[10vh] z-10">
-        <Board />
-        {!openedByMenu && clueIndex < clues.length && <Clue key={clues[clueIndex].id} obj={clues[clueIndex]} index={clueIndex} className={'z-2'} onlyPostIT={false} />}
-        <button type="button" autoFocus aria-label="Chiudi lavagna" onClick={handleClickButton} className="z-3 absolute right-[calc(10vw+40px)] top-[calc(10vh+0px)] translate-1/2 cursor-pointer"><Image src={'/assets/close.svg'} width={40} height={40} alt="" /></button>
+    const hasNewClue = !openedByMenu && clueIndex < clues.length;
+    const [attached, setAttached] = useState(false);
+    const [expandedIndex, setExpandedIndex] = useState<number | null>(hasNewClue ? clueIndex : null);
+    const slots = useRef<(HTMLDivElement | null)[]>([]);
+    const focusIndex = useRef<number | null>(null);
+    useLayoutEffect(() => {
+        if (expandedIndex === null && focusIndex.current !== null) {
+            slots.current[focusIndex.current]?.querySelector('button')?.focus();
+            focusIndex.current = null;
+        }
+    }, [expandedIndex]);
+    const returnToBoard = () => {
+        focusIndex.current = expandedIndex;
+        if (hasNewClue) setAttached(true);
+        setExpandedIndex(null);
+    };
+    return <div role="dialog" aria-modal="true" aria-label="Lavagna degli indizi" className="clue-board-screen fixed inset-0 bg-[#000000aa] z-10">
+        <Board
+            clues={clues}
+            visibleCount={clueIndex + (hasNewClue && attached ? 1 : 0)}
+            expandedIndex={expandedIndex}
+            onSelect={setExpandedIndex}
+            setSlot={(index, element) => { slots.current[index] = element; }}
+        />
+        {expandedIndex !== null && <CluePreview
+            key={clues[expandedIndex].id}
+            obj={clues[expandedIndex]}
+            index={expandedIndex}
+            isNew={hasNewClue && !attached}
+            getTarget={() => slots.current[expandedIndex]}
+            onReturn={returnToBoard}
+        />}
+        <button type="button" autoFocus={expandedIndex === null} tabIndex={expandedIndex === null ? 0 : -1} aria-label="Chiudi lavagna" onClick={handleClickButton} className="board-close cursor-pointer"><Image src={'/assets/close.svg'} width={40} height={40} alt="" /></button>
     </div>
 }

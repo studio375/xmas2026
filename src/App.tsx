@@ -5,6 +5,7 @@ import ChoosePlayer from './components/choose player/chosePlayer';
 import { EventBus } from './game/EventBus';
 import ClueBoard from './components/clue board/clueBoard'
 import GameOverlay from './components/game overlay/gameOverlay';
+import SuspectedSection from './components/suspectedSection';
 import { useShallow } from 'zustand/react/shallow';
 
 function App()
@@ -22,7 +23,8 @@ function App()
     })));
     const [showClue, setShowClue] = useState(false);
     const boardOpenedByMenu = showComponents.includes('clues');
-    const paused = menuOpen || showClue || boardOpenedByMenu;
+    const suspectedOpened = showComponents.includes('suspected');
+    const paused = menuOpen || showClue || boardOpenedByMenu || suspectedOpened;
     useEffect(() => {
         const handleShowClue = () => {
             if (clueIndex >= clues.length) {
@@ -49,6 +51,7 @@ function App()
     }
     return (
         <div id="app">
+            {gameStep === 'start' && suspectedOpened && <SuspectedSection onClose={() => setShowComponents(showComponents.filter(component => component !== 'suspected'))} />}
             {gameStep === 'start' && (showClue || boardOpenedByMenu) && <ClueBoard handleClickButton={handleCloseBoard} openedByMenu={!showClue} />}
             {gameStep == 'choose player' && <ChoosePlayer />}
             {gameStep == 'start' && <><PhaserGame ref={phaserRef} paused={paused} /><GameOverlay /></>}

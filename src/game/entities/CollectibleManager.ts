@@ -37,6 +37,6 @@ export class CollectibleManager
 
     spawnCollectibleAt(x: number, y: number)
     {
-        this.collectibles?.create(x, y, ASSET_KEYS.collectible).setScale(0.05);
+        this.collectibles?.create(x, y, ASSET_KEYS.collectible);
     }
 }

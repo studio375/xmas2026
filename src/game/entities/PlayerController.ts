@@ -78,7 +78,7 @@ export class PlayerController
             this.sprite.setVelocityX(GAME_CONFIG.playerSpeed);
             this.sprite.anims.play('right', true);
         }
-        else if ((this.cursors.down.isDown || this.keyS.isDown) && (this.sprite.body && !this.sprite.body.touching.down && !this.sprite.body.blocked.down)) {
+        else if ((this.cursors.down.isDown || this.keyS.isDown) && this.sprite.body && !this.sprite.body.blocked.down) {
             this.sprite.setVelocityX(0);
             this.sprite.setVelocityY(500);
             this.sprite.anims.play('down', true);
@@ -89,7 +89,7 @@ export class PlayerController
             if (this.sprite.anims.currentAnim?.key !== 'turn') this.sprite.anims.play('turn');
         }
 
-        if ((this.cursors.up.isDown || this.cursors.space.isDown || this.keyW.isDown) && (this.sprite.body?.touching.down || this.sprite.body?.blocked.down))
+        if ((this.cursors.up.isDown || this.cursors.space.isDown || this.keyW.isDown) && this.sprite.body?.blocked.down)
         {
             this.sprite.setVelocityY(GAME_CONFIG.jumpVelocity);
         }

@@ -77,6 +77,14 @@ export const GAME_DATA:GameData = {
             frameWidth:86,
             frameHeight:196
         },
+        {
+            id: 9,
+            name: 'Cri',
+            role: 'Colei che paga',
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce at euismod ligula. Nunc egestas tristique augue a aliquet. Praesent congue mauris metus, sit amet scelerisque dolor suscipit sit amet. Curabitur tempor in odio et facilisis. Nunc commodo porttitor ligula, vitae ultrices massa lacinia sit amet. Praesent et turpis eros. Nunc gravida sem at arcu rhoncus cursus.',
+            frameWidth:86,
+            frameHeight:190
+        },
     ],
     //rams - 1
     //sbobby - 2
@@ -86,14 +94,14 @@ export const GAME_DATA:GameData = {
     //mela - 6
     //ale - 7
     //elena - 8
+    //cri - 9
     clues: [ 
         {id: 1, text:'Son stati trovati per terra un paio di occhiali', suspected: [3,4,5,7], exclusivityLevel: 3},
         {id: 2, text:'È stato rilevato un capello nel cappello di Babbo Natale. La scientifica approfondirà il caso.', suspected: [2,3,4,5,6,7,8], hasRelated: true, exclusivityLevel: 1},
         {id: 3, text:'La scientifica ha analizzato il campione, risulta essere il pelo di un animale', suspected: [2,4,5,7,8], relatedClue: 2, exclusivityLevel: 2},
         {id: 4, text:'Stando alle dichiarazioni, fino alle 17.30 nessuno si è mai mosso dall\'ufficio', suspected: [5,6], exclusivityLevel: 5},
-        {id: 5, text:'Placeholder Clue', suspected: [1,2,3,4,5,6,7,8], exclusivityLevel: 1},
-        {id: 6, text:'Placeholder Clue', suspected: [1,2,3,4,5,6,7,8], exclusivityLevel: 1},
-        {id: 7, text:'Placeholder Clue', suspected: [1,2,3,4,5,6,7,8], exclusivityLevel: 1},
+        {id: 5, text:'Placeholder Clue', suspected: [1,2,3,4,5,6,7,8,9], exclusivityLevel: 1},
+        {id: 6, text:'Placeholder Clue', suspected: [1,2,3,4,5,6,7,8,9], exclusivityLevel: 1},
+        {id: 7, text:'Placeholder Clue', suspected: [1,2,3,4,5,6,7,8,9], exclusivityLevel: 1},
     ]
 }
-

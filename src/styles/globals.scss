@@ -157,14 +157,6 @@ body {
         }
     }
 
-    .clue-presentation > .clue {
-        --clue-size: min(350px, calc(100dvh - 180px));
-        width: var(--clue-size);
-        height: var(--clue-size);
-        left: calc(50vw - var(--clue-size) / 2);
-        top: calc(50dvh - var(--clue-size) / 2 - 30px);
-        font-size: clamp(16px, 3.5dvh, 25px);
-    }
 }
 
 
@@ -181,13 +173,14 @@ body {
     font-size: 40px;
     color: #E8E8E8;
     font-family: "Walter Turncoat", cursive;
-    display: block;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: clamp(12px, 3dvh, 28px);
     width: 100%;
     height: 100%;
-    min-height: auto;
+    min-height: 0;
     background-color: #000;
-    padding: 20px 30px;
-    overflow-y: auto;
+    padding: clamp(12px, 2vw, 30px);
     box-shadow: -1px 2px 2px 0px #555, inset 0 0 10px 0 #555;
     -webkit-border-radius: 10px;
     -khtml-border-radius: 10px;
@@ -203,5 +196,334 @@ body {
     
     a {
         color: #ff0
+    }
+}
+
+.clue-board-screen {
+    padding: 5dvh 4vw;
+}
+
+.board > h2 {
+    font-size: clamp(18px, 3.5dvh, 36px);
+    line-height: 1.2;
+    padding-right: 36px;
+}
+
+.board-clues {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: clamp(8px, 2vw, 24px);
+    min-height: 0;
+}
+
+.board-clue-slot {
+    min-width: 0;
+    min-height: 0;
+}
+
+.clue-pinned {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    cursor: zoom-in;
+}
+
+.clue-paper {
+    position: absolute;
+    display: block;
+    left: 50%;
+    top: 50%;
+    width: 560px;
+    height: 420px;
+    padding: 30px;
+    font-size: 25px;
+    line-height: 1.5;
+    text-align: left;
+    overflow-wrap: anywhere;
+    transform-origin: center;
+    pointer-events: none;
+}
+
+.clue-hidden {
+    visibility: hidden;
+}
+
+.clue-pinned:focus {
+    outline: none;
+}
+
+.clue-expanded:focus-visible, .board-close:focus-visible {
+    outline: 3px solid var(--arcade-color);
+    outline-offset: 3px;
+}
+
+.board-close {
+    position: absolute;
+    top: calc(5dvh + 14px);
+    right: calc(4vw + 14px);
+    z-index: 3;
+    width: 32px;
+    height: 32px;
+}
+
+.clue-preview {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    justify-items: center;
+    align-items: center;
+    gap: 20px;
+    padding: 60px 16px 24px;
+}
+
+.clue-preview-backdrop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: #000a;
+    cursor: zoom-out;
+}
+
+.clue-expanded {
+    position: relative;
+    width: min(560px, calc(100vw - 32px), calc((100dvh - 160px) * 4 / 3));
+    aspect-ratio: 4 / 3;
+    min-height: 0;
+    padding: 0;
+    cursor: zoom-out;
+}
+
+.clue-return {
+    z-index: 1;
+    max-width: 100%;
+    font-size: clamp(10px, 2dvh, 14px);
+}
+
+.suspected-section {
+    padding: 5dvh 4vw;
+    background: #000a;
+}
+
+.suspected-notebook {
+    position: relative;
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: clamp(12px, 2dvh, 24px);
+    padding: clamp(16px, 3dvh, 32px) clamp(20px, 4vw, 64px);
+    color: #302a26;
+    border: 8px solid #6c4030;
+    border-radius: 12px 22px 22px 12px;
+    background:
+        linear-gradient(90deg, transparent 47px, #c9666655 48px, #c9666655 49px, transparent 50px),
+        repeating-linear-gradient(#fbf3dc 0 29px, #aab9ba66 30px, #fbf3dc 31px);
+    box-shadow: inset 12px 0 18px #58391f26, 5px 5px 0 #d9c8a4, 9px 9px 0 #6c4030, 0 20px 50px #0008;
+
+    &::before {
+        content: '';
+        position: absolute;
+        left: -16px;
+        top: 24px;
+        bottom: 24px;
+        width: 26px;
+        background: repeating-linear-gradient(transparent 0 13px, #3c3530 14px 18px, #a8a29e 19px 21px, transparent 22px 40px);
+        border-radius: 6px;
+        pointer-events: none;
+    }
+}
+
+.suspected-heading {
+    text-align: center;
+    padding-inline: 24px;
+    padding-bottom: 6px;
+
+    h2 {
+        font-size: clamp(22px, 4dvh, 40px);
+        line-height: 1.2;
+        margin-block: 6px;
+    }
+
+    p {
+        font-size: clamp(12px, 1.9dvh, 17px);
+        line-height: 1.4;
+    }
+}
+
+.suspected-eyebrow {
+    display: block;
+    color: #8f342e;
+    font-size: clamp(8px, 1.3dvh, 12px);
+}
+
+.suspected-legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 4px 12px;
+    margin-top: 6px;
+
+    .legend-excluded {
+        color: #777;
+        text-decoration: line-through;
+    }
+
+    .legend-suspected {
+        color: #ae302b;
+        border: 2px solid currentColor;
+        border-radius: 50%;
+        padding-inline: 8px;
+        transform: rotate(-4deg);
+    }
+}
+
+.suspected-photos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: stretch;
+    gap: 12px 20px;
+    min-height: 0;
+}
+
+.suspected-card {
+    flex: 0 0 calc((100% - 60px) / 4);
+    height: calc((100% - 12px) / 2);
+    min-height: 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    border-radius: 6px;
+
+    &:focus-visible {
+        outline: 3px dashed #8f342e;
+        outline-offset: 3px;
+    }
+
+    &:nth-child(odd) .suspected-polaroid {
+        transform: rotate(-3deg);
+    }
+
+    &:nth-child(even) .suspected-polaroid {
+        transform: rotate(3deg);
+    }
+
+    &:hover .suspected-polaroid {
+        transform: rotate(0);
+    }
+
+    &.is-excluded {
+        img {
+            filter: grayscale(1);
+            opacity: 0.5;
+        }
+
+        .suspected-name {
+            color: #777;
+            text-decoration: line-through;
+        }
+    }
+
+    &.is-suspected .suspected-circle path {
+        stroke-dashoffset: 0;
+        opacity: 1;
+    }
+}
+
+.suspected-polaroid {
+    position: relative;
+    display: block;
+    height: calc(100% - 26px);
+    aspect-ratio: 355 / 413;
+    max-width: 100%;
+    transition: transform 200ms ease;
+    filter: drop-shadow(2px 4px 3px #47352640);
+
+    img {
+        width: 100%;
+        height: 100%;
+        transition: filter 350ms ease, opacity 350ms ease;
+    }
+}
+
+.suspected-name {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 3%;
+    font-size: clamp(11px, 2.2dvh, 23px);
+    line-height: 1.1;
+}
+
+.suspected-status {
+    font-size: clamp(11px, 1.7dvh, 16px);
+    line-height: 22px;
+}
+
+.suspected-circle {
+    position: absolute;
+    inset: 3% 3% 18%;
+    width: 94%;
+    height: 79%;
+    overflow: visible;
+
+    path {
+        fill: none;
+        stroke: #b52e28;
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke-dasharray: 300;
+        stroke-dashoffset: 300;
+        opacity: 0;
+        transition: stroke-dashoffset 450ms ease, opacity 150ms ease;
+    }
+}
+
+.suspected-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+
+    &:focus-visible {
+        outline: 2px solid #8f342e;
+        outline-offset: 3px;
+    }
+}
+
+@media (max-width: 767px) {
+    .suspected-notebook {
+        padding: 20px 16px;
+    }
+
+    .suspected-photos {
+        gap: 12px;
+        overflow-y: auto;
+        align-content: flex-start;
+        padding: 6px;
+    }
+
+    .suspected-card {
+        flex-basis: calc((100% - 12px) / 2);
+        height: 200px;
+    }
+
+    .suspected-heading {
+        padding-inline: 8px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .suspected-polaroid, .suspected-polaroid img, .suspected-circle path {
+        transition: none;
     }
 }

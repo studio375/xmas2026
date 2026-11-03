@@ -27,15 +27,19 @@ This template has been updated for:
 | `npm run build-nolog` | Create a production build in the `dist` folder without sending anonymous data (see "About log.js" below) |
 | `npm run typecheck` | Check all TypeScript sources without generating files |
 | `npm run lint` | Run ESLint with the Next.js flat configuration |
-| `npm test` | Run state and restart regression tests (Node.js 22.17 or later) |
+| `npm test` | Run state, restart and player-grounding regression tests (Node.js 22.17 or later) |
 
 ## Xmas 2026 gameplay and maintenance
 
-- Move with Left/Right or A/D. Jump with Up, Space or W. Fast descent is currently disabled in the player controller.
+- Move with Left/Right or A/D. Jump with Up, Space or W while standing on a solid surface. Overlapping stars, balls or props does not enable jumping. Fast descent with Down or S is available only in the air.
 - Every three collected items reveal an available clue. After all clues have been revealed, collecting items no longer leaves the game paused.
+- Every character eligible as a culprit must appear in at least three distinct clues in `suspected`; the game-data regression test checks this requirement. Cri currently uses the three placeholder clues.
 - The menu and clue board pause the game. Closing the board resumes gameplay only when no other pause overlay remains open.
+- The clue board uses four columns and two rows (up to eight clues). Click an attached clue to enlarge it; click the enlarged note, the backdrop, the return button or press Escape to return it to its cell. New clues animate into their actual grid cell, including after viewport resizing. Reduced-motion preferences skip these animations. This layout does not change the number of clues generated for a game.
+- Pinned and enlarged clues share a fixed 560 by 420 layout. A uniform transform scale fits the whole paper to its cell or the viewport, preserving text wrapping, padding and proportions during zoom and return animations.
 - **Ricomincia**, in the menu or game-over screen, returns to character selection and resets the investigation, lives and counters.
-- **Sospettati** is disabled until its screen is implemented.
+- **Sospettati** opens [the investigation notebook](./src/components/suspectedSection.tsx), which shows all characters except the player using their polaroid images. Click a photo to cycle through unmarked, excluded (grayscale), suspected (red circle), then unmarked. A visible legend explains the cycle. These are personal annotations, not automatic verdicts or accusations.
+- Notebook annotations survive closing and reopening the section, but reset on a new game or restart. The game stays paused while the notebook is open; close it with the top-right button or Escape. Desktop photos use a wrapping flex layout with four columns and two rows; narrow screens use two columns and internal scrolling. Transitions respect reduced-motion preferences.
 - On desktop (768 CSS pixels and wider), selection, menu and game-over layouts adapt to viewport height, reserving room for their buttons without scrolling. Character art, description typography and clue presentation scale with available height; the mobile selection retains scrolling.
 - `startGame` in [the store](./src/store/useStore.ts) publishes character, culprit and clues together; components subscribe only to the state they use.
 - The day/night background uses a scene-owned Phaser tween and draws only the viewport, skipping unchanged colors. Damage invulnerability uses the scene clock, so its timer stops while the game is paused.

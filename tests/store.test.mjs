@@ -55,3 +55,31 @@ test('starting another game resets old progress without mutating supplied clues'
     assert.deepEqual(state.clues, []);
     assert.equal(clues.length, 1);
 });
+
+test('suspect annotations cycle independently and survive closing the notebook', () => {
+    useStore.getState().startGame(player, guilty, clues);
+    useStore.getState().setShowComponents(['suspected']);
+    useStore.getState().cycleSuspect(guilty.id);
+    assert.equal(useStore.getState().suspectStatuses[guilty.id], 'excluded');
+    const previous = useStore.getState().suspectStatuses;
+    useStore.getState().cycleSuspect(3);
+    assert.equal(previous[3], undefined);
+    assert.equal(useStore.getState().suspectStatuses[3], 'excluded');
+    useStore.getState().setShowComponents([]);
+    useStore.getState().setShowComponents(['suspected']);
+    assert.equal(useStore.getState().suspectStatuses[guilty.id], 'excluded');
+    useStore.getState().cycleSuspect(guilty.id);
+    assert.equal(useStore.getState().suspectStatuses[guilty.id], 'suspected');
+    useStore.getState().cycleSuspect(guilty.id);
+    assert.equal(useStore.getState().suspectStatuses[guilty.id], 'neutral');
+    assert.equal(useStore.getState().suspectStatuses[3], 'excluded');
+});
+
+test('new games and restart clear suspect annotations', () => {
+    useStore.getState().cycleSuspect(guilty.id);
+    useStore.getState().resetGame();
+    assert.deepEqual(useStore.getState().suspectStatuses, {});
+    useStore.getState().cycleSuspect(guilty.id);
+    useStore.getState().startGame(player, guilty, clues);
+    assert.deepEqual(useStore.getState().suspectStatuses, {});
+});
