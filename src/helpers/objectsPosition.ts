@@ -1,4 +1,10 @@
+import type { AssetKey } from './assets';
 
+interface PositionedElement {
+    x: number;
+    y: number;
+    key: AssetKey;
+}
 
 //x=0 -> sx
 //y=0 -> in linea col pavimento
@@ -43,4 +49,8 @@ export const GAME_POSITIONS = {
     untouchableElements: [
         {x:0, y:0, key: 'christmas_tree'}
     ]
-}
+} satisfies {
+    platforms: PositionedElement[];
+    cubes: { x: number; y: number; hasProp: boolean }[];
+    untouchableElements: PositionedElement[];
+};

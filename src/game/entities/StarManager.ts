@@ -1,6 +1,5 @@
 import { ASSET_KEYS } from '@/helpers/assets';
-import { GAME_CONFIG } from '@/helpers/gameConfig';
-import Phaser, { Math as PhaserMath } from 'phaser';
+import Phaser from 'phaser';
 
 
 export class StarManager
@@ -20,10 +19,9 @@ export class StarManager
         });
     }
 
-    // param naming e ordine mantenuti identici all'originale (l'overlap li passa così)
-    collect(player: any, star: any)
+    collect(star: Phaser.Physics.Arcade.Sprite)
     {
-        star.disableBody(true, true);
+        star.destroy();
         this.score += 1;
         this.onScoreUpdate(this.score);
     }

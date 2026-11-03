@@ -1,24 +1,22 @@
 import { useStore } from "@/store/useStore";
 import ArcadeText from "../../arcadeText";
 import Button from "../../button";
-import { EventBus } from "@/game/EventBus";
-import { useRef } from "react";
 
 export default function InnerMenu(){
-    const {showComponents, setShowComponents}:any = useStore();
-    const ref = useRef<any>(null);
+    const setShowComponents = useStore(state => state.setShowComponents);
+    const setMenuOpen = useStore(state => state.setMenuOpen);
+    const resetGame = useStore(state => state.resetGame);
     const handleOnClickClues = () => {
-        setShowComponents([...showComponents, 'clues']);
-        if(!ref.current) return;
-        ref.current.style.display = 'none';
+        setShowComponents(['clues']);
+        setMenuOpen(false);
     }
-    return <div ref={ref} className="fixed top-0 left-0 w-screen h-screen bg-[#000000c9] py-10">
+    return <div role="dialog" aria-modal="true" aria-label="Menu di gioco" className="game-menu fixed inset-0 z-10 bg-[#000000c9] py-10 overflow-y-auto pointer-events-auto">
         <div className="flex flex-col items-center gap-3">
             <ArcadeText addClassName="text-[35px]">Menu</ArcadeText>
             <Button onClick={handleOnClickClues}>Indizi</Button>
-            <Button>Sospettati</Button>
-            <Button>Ricomincia</Button>
-            <Button onClick={() => EventBus.emit('open-menu', false)}>Indietro</Button>
+            <Button disabled title="Funzione non ancora disponibile">Sospettati</Button>
+            <Button onClick={resetGame}>Ricomincia</Button>
+            <Button autoFocus onClick={() => setMenuOpen(false)}>Indietro</Button>
         </div>
     </div>
 }

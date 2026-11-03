@@ -1,26 +1,22 @@
-import { Character, GAME_DATA } from "@/helpers/gameData"
+import { Character } from "@/helpers/gameData"
 import Image from "next/image"
 import { Swiper, SwiperSlide } from "swiper/react"
 import ArcadeText from "../arcadeText"
 import EffectCarousel from '@/addons/effect-carousel/effect-carousel.esm';
-import { Autoplay, Navigation, Pagination } from "swiper/modules";
+import { A11y, Navigation, Pagination } from "swiper/modules";
 
 import "swiper/css";
-import 'swiper/css/autoplay';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-import 'swiper/css/virtual';
-import { useRef } from "react";
 
 interface PlayersGalleryProps{
     characters:Character[],
-    onSlideChange(char:Character):any
+    onSlideChange(char:Character):void
 }
 export default function PlayersGallery({characters, onSlideChange}:PlayersGalleryProps){
-    const ref = useRef<any>(null);
     return <Swiper 
-                className="!w-[60%] !py-7 [&_.swiper-pagination-bullet]:!bg-white" 
-                modules={[Autoplay, Navigation, Pagination, EffectCarousel]}
+                className="player-gallery !w-full md:!w-[60%] [&_.swiper-pagination-bullet]:!bg-white"
+                modules={[A11y, Navigation, Pagination, EffectCarousel]}
                 effect="carousel" 
                 grabCursor={true}
                 loop={true} 
@@ -28,9 +24,8 @@ export default function PlayersGallery({characters, onSlideChange}:PlayersGaller
                 slidesPerView={2}
                 navigation={true}
                 pagination={true}
-                onInit={(swiper) => {ref.current = swiper;}}
                 onSlideChange={(swiper) => {
-                    if(ref.current) onSlideChange(GAME_DATA.characters[ref.current.realIndex])
+                    onSlideChange(characters[swiper.realIndex]);
                 }}
             >
         {

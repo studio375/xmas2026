@@ -2,7 +2,6 @@ import Phaser from 'phaser';
 import { ASSET_KEYS } from '@/helpers/assets';
 import { GAME_POSITIONS } from '@/helpers/objectsPosition';
 import { CollectibleManager } from './CollectibleManager';
-import { useStore } from '@/store/useStore';
 
 export class CubeManager
 {
@@ -13,7 +12,6 @@ export class CubeManager
     create()
     {
         var floorStart = this.scene.registry.get('floor-start');
-        console.log(floorStart);
         this.cubes = this.scene.physics.add.staticGroup();
         GAME_POSITIONS.cubes.forEach(elem => {
             if(elem.hasProp)

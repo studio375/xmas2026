@@ -24,8 +24,8 @@ export default function Home() {
     return (
         <>
             <Head>
-                <title>Phaser Nextjs Template</title>
-                <meta name="description" content="A Phaser 3 Next.js project template that demonstrates Next.js with React communication and uses Vite for bundling." />
+                <title>Xmas 2026</title>
+                <meta name="description" content="Scegli il tuo personaggio, raccogli gli indizi e scopri il colpevole." />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.png" />
             </Head>

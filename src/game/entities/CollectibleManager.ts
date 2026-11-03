@@ -1,6 +1,5 @@
 import { ASSET_KEYS } from '@/helpers/assets';
-import { GAME_CONFIG } from '@/helpers/gameConfig';
-import Phaser, { Math as PhaserMath } from 'phaser';
+import Phaser from 'phaser';
 import { EventBus } from '../EventBus';
 
 
@@ -8,7 +7,7 @@ export class CollectibleManager
 {
     collectibles: Phaser.Physics.Arcade.Group;
     counter = 0;
-    counterLimit = 3;
+    readonly counterLimit = 3;
 
     constructor(
         private scene: Phaser.Scene,
@@ -23,17 +22,16 @@ export class CollectibleManager
         });
     }
 
-    collect(player: any, coll: any)
+    collect(coll: Phaser.Physics.Arcade.Sprite)
     {
-        coll.disableBody(true, true);
+        coll.destroy();
         this.onCollect();
         this.counter += 1;
-        if (this.counter === 3)
+        if (this.counter === this.counterLimit)
         {
             this.onClueScore();
             this.counter = 0;
         }
-        console.log(this.counter);
         EventBus.emit('props-count-update', this.counter);
     }
 

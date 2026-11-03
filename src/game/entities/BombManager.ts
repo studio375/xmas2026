@@ -24,7 +24,7 @@ export class BombManager
 
         const [minBounce, maxBounce] = GAME_CONFIG.bombBounceLimits;
         const [minVelX, maxVelX] = GAME_CONFIG.bombVelocityXLimits;
-        const [minVelY, maxVelY] = GAME_CONFIG.bombVelocityXLimits;
+        const [minVelY, maxVelY] = GAME_CONFIG.bombVelocityYLimits;
         bomb.setBounce(Math.FloatBetween(minBounce, maxBounce));
         bomb.setCollideWorldBounds(true);
         bomb.setVelocity(Math.Between(minVelX, maxVelX), Math.Between(minVelY, maxVelY));

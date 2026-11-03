@@ -1,4 +1,4 @@
-export const ASSET_KEYS : any = {
+export const ASSET_KEYS = {
     ground: 'ground',
     ground2: 'ground-2',
     base: 'base',
@@ -13,9 +13,11 @@ export const ASSET_KEYS : any = {
     emptyHeart: 'empty-heart',
     collectible: 'fish',
     christmas_tree: 'christmas-tree'
-};
+} as const;
 
-export const ASSET_PATHS : any = {
+export type AssetKey = keyof typeof ASSET_KEYS;
+
+export const ASSET_PATHS = {
     ground: '/platforms/platform_01.png',
     ground2: '/platforms/platform_02.png',
     base: '/platforms/terreno_03.png',
@@ -30,4 +32,4 @@ export const ASSET_PATHS : any = {
     collectible: '/game-components/fish.png',
     christmas_tree:'/bg-elements/christmas-tree.png',
     hamburger_menu:'/assets/overlay-elements/hamburger-menu.svg'
-};
+} as const satisfies Record<Exclude<AssetKey, 'dude'> | 'hamburger_menu', string>;

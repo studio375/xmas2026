@@ -4,7 +4,7 @@ import { GAME_CONFIG } from "@/helpers/gameConfig";
 import { EventBus } from "@/game/EventBus";
 import { ASSET_PATHS } from "@/helpers/assets";
 
-export default function ClientLivesManager({manageRecovered=false}:any){
+export default function ClientLivesManager({manageRecovered=false}: { manageRecovered?: boolean }){
     const [lives, setLives] = useState<number>(GAME_CONFIG.initialLives);
     const [recoveredLives, setRecoveredLives] = useState<number>(0);
 
@@ -29,9 +29,9 @@ export default function ClientLivesManager({manageRecovered=false}:any){
         return <ClassicText Tag={'span'} addClassName="text-[32px]">{`Vite recuperabili: ${(GAME_CONFIG.maxRecoverableLives-recoveredLives)}`}</ClassicText>
     }
 
-    return <div className="flex items-center gap-[5px]">
+    return <div role="status" aria-label={`Vite: ${lives}`} className="flex items-center gap-[5px]">
         {
-            Array.from({ length: GAME_CONFIG.initialLives }).map((_, index) => {
+            Array.from({ length: Math.max(GAME_CONFIG.initialLives, lives) }).map((_, index) => {
                 const lifeNumber = index + 1;
                 const isFull = lifeNumber <= lives;
                 const src = `${isFull ? ASSET_PATHS.heart : ASSET_PATHS.emptyHeart}`;

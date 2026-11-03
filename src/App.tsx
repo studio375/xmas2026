@@ -1,60 +1,55 @@
 import { useEffect, useRef, useState } from 'react';
 import { IRefPhaserGame, PhaserGame } from './PhaserGame';
-import * as Phaser from 'phaser';
 import { useStore } from './store/useStore';
 import ChoosePlayer from './components/choose player/chosePlayer';
 import { EventBus } from './game/EventBus';
-import { ClueVariable, GAME_DATA } from './helpers/gameData';
 import ClueBoard from './components/clue board/clueBoard'
-import Menu from './components/game overlay/menu/menu';
 import GameOverlay from './components/game overlay/gameOverlay';
-
-function getClue(usedClues:number[]){
-    const possibleClues = GAME_DATA.clues.filter((elem:ClueVariable) => {
-        return !usedClues.includes(elem.id);
-    });
-    return possibleClues[Math.floor(Math.random() * possibleClues.length)];
-}
-
-function removeArrayElementByValue(val, array){
-    var i = array.indexOf(val);
-    if(i !== -1) array.splice(i, 1); 
-    return array;
-}
-
+import { useShallow } from 'zustand/react/shallow';
 
 function App()
 {
     //  References to the PhaserGame component (game and scene are exposed)
     const phaserRef = useRef<IRefPhaserGame | null>(null);
-    const {gameStep, setGameStep, usedClues, setUsedClues, clues, clueIndex, setClueIndex, showComponents, setShowComponents} : any = useStore();
-    const [showClue, setShowClue] = useState<boolean | false>(false);
+    const {gameStep, clues, clueIndex, setClueIndex, showComponents, setShowComponents, menuOpen} = useStore(useShallow(state => ({
+        gameStep: state.gameStep,
+        clues: state.clues,
+        clueIndex: state.clueIndex,
+        setClueIndex: state.setClueIndex,
+        showComponents: state.showComponents,
+        setShowComponents: state.setShowComponents,
+        menuOpen: state.menuOpen,
+    })));
+    const [showClue, setShowClue] = useState(false);
+    const boardOpenedByMenu = showComponents.includes('clues');
+    const paused = menuOpen || showClue || boardOpenedByMenu;
     useEffect(() => {
         const handleShowClue = () => {
-            //const clue:ClueVariable = getClue(usedClues);
+            if (clueIndex >= clues.length) {
+                if (!paused) phaserRef.current?.game?.resume();
+                return;
+            }
             setShowClue(true);
-            //setUsedClues([...usedClues, clue.id])
         }
         EventBus.on('show-clue', handleShowClue);
         return () => {
             EventBus.removeListener('show-clue', handleShowClue);
         }
-    }, [])
+    }, [clueIndex, clues, paused])
+    useEffect(() => {
+        if (gameStep === 'choose player') setShowClue(false);
+    }, [gameStep]);
     const handleCloseBoard = () => {
-        var newIndex = showClue?clueIndex+1:clueIndex;
+        const newIndex = showClue ? clueIndex + 1 : clueIndex;
         setShowClue(false); 
-        var currentShowComponents = showComponents;
-        setShowComponents(removeArrayElementByValue('clues', currentShowComponents));
+        setShowComponents(showComponents.filter(component => component !== 'clues'));
         setClueIndex(newIndex)
-        phaserRef.current?.game?.resume(); 
     }
-    console.log(showComponents);
     return (
         <div id="app">
-            {(showClue || (showComponents.length && showComponents.includes('clues'))) ? <ClueBoard  handleClickButton={handleCloseBoard} openedByMenu={(showComponents.length && showComponents.includes('clues'))} />:''}
-            {/* {showClue && <Clue obj={showClue} handleClickButton={() => {setShowClue(false); phaserRef.current?.game?.resume();}}/>} */}
+            {gameStep === 'start' && (showClue || boardOpenedByMenu) && <ClueBoard handleClickButton={handleCloseBoard} openedByMenu={!showClue} />}
             {gameStep == 'choose player' && <ChoosePlayer />}
-            {gameStep == 'start' && <><PhaserGame ref={phaserRef} /><GameOverlay /></>}
+            {gameStep == 'start' && <><PhaserGame ref={phaserRef} paused={paused} /><GameOverlay /></>}
         </div>
     )
 }

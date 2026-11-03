@@ -25,6 +25,23 @@ This template has been updated for:
 | `npm run build` | Create a production build in the `dist` folder |
 | `npm run dev-nolog` | Launch a development web server without sending anonymous data (see "About log.js" below) |
 | `npm run build-nolog` | Create a production build in the `dist` folder without sending anonymous data (see "About log.js" below) |
+| `npm run typecheck` | Check all TypeScript sources without generating files |
+| `npm test` | Run state and restart regression tests (Node.js 22.17 or later) |
+
+## Xmas 2026 gameplay and maintenance
+
+- Move with Left/Right or A/D. Jump with Up, Space or W. Fast descent is currently disabled in the player controller.
+- Every three collected items reveal an available clue. After all clues have been revealed, collecting items no longer leaves the game paused.
+- The menu and clue board pause the game. Closing the board resumes gameplay only when no other pause overlay remains open.
+- **Ricomincia**, in the menu or game-over screen, returns to character selection and resets the investigation, lives and counters.
+- **Sospettati** is disabled until its screen is implemented.
+- On desktop (768 CSS pixels and wider), selection, menu and game-over layouts adapt to viewport height, reserving room for their buttons without scrolling. Character art, description typography and clue presentation scale with available height; the mobile selection retains scrolling.
+- `startGame` in [the store](./src/store/useStore.ts) publishes character, culprit and clues together; components subscribe only to the state they use.
+- The day/night background uses a scene-owned Phaser tween and draws only the viewport, skipping unchanged colors. Damage invulnerability uses the scene clock, so its timer stops while the game is paused.
+- The board texture is a separate [PNG asset](./public/assets/bg-elements/clue-board.png), rather than a large base64 string embedded in the global stylesheet, so it can load on demand and be cached independently.
+
+For validation, run `npm run typecheck`, `npm test` and `npm run build-nolog`. The build currently reports that ESLint is missing; a successful build is not a lint result.
+For frame-rate comparisons, serve the production export in `dist` rather than the development server and profile it on the target device. The rendering changes do not establish an FPS improvement without measurements.
 
 ## Writing Code
 

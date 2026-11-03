@@ -1,23 +1,14 @@
 'use client'
 import Image from "next/image";
 import {  ASSET_PATHS } from "@/helpers/assets";
-import { useEffect, useState } from "react";
 import InnerMenu from "./innerMenu";
-import { EventBus } from "@/game/EventBus";
+import { useStore } from "@/store/useStore";
 
 export default function Menu(){
-    const [innerVisible, setInnerVisible] = useState<boolean>(false);
-    useEffect(() => {
-        const handleOpenMenu = (isOpen:boolean) => {
-            setInnerVisible(isOpen);
-        }   
-        EventBus.on('open-menu', handleOpenMenu);
-        return () => {
-            EventBus.removeListener('open-menu', handleOpenMenu);
-        }
-    }, [])  
+    const innerVisible = useStore(state => state.menuOpen);
+    const setMenuOpen = useStore(state => state.setMenuOpen);
     return <>
-        <div onClick={() => EventBus.emit('open-menu', !innerVisible)} className="cursor-pointer relative"><Image src={ASSET_PATHS.hamburger_menu} width={50} height={50} alt="hamburger menu" /></div>
+        <button type="button" onClick={() => setMenuOpen(!innerVisible)} aria-label="Apri menu" aria-expanded={innerVisible} className="cursor-pointer relative pointer-events-auto"><Image src={ASSET_PATHS.hamburger_menu} width={50} height={50} alt="" /></button>
         {innerVisible && <InnerMenu />}
     </>
 }

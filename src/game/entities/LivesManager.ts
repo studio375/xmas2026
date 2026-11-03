@@ -1,5 +1,4 @@
 import Phaser from 'phaser';
-import { ASSET_KEYS } from '@/helpers/assets';
 import { GAME_CONFIG } from '@/helpers/gameConfig';
 import { EventBus } from '../EventBus';
 
@@ -18,9 +17,6 @@ export class LivesManager
     {
         this.livesCounter -= 1;
         EventBus.emit('update-lives', this.livesCounter);
-        if(this.livesCounter <= 0){
-            EventBus.emit('game-over');
-        }
         return this.livesCounter <= 0;
     }
 

@@ -1,4 +1,4 @@
-import { Cameras, Math, Scene } from 'phaser';
+import { Cameras, GameObjects, Math, Scene } from 'phaser';
 import { EventBus } from '../EventBus';
 import { Character } from '@/helpers/gameData';
 
@@ -17,7 +17,7 @@ export class Game extends Scene
     floor:any;
     cubes:any;
     livesCounter:number=3;
-    livesImages:[]=[];
+    livesImages: GameObjects.Image[] = [];
     playerHitted:boolean = false;
     constructor ()
     {
@@ -43,7 +43,7 @@ export class Game extends Scene
         this.load.image('cube', 'cube.png');
         this.load.image('empty-cube', '/cubes/cubo_nudo.png');
         this.load.spritesheet('dude', 
-            this.selectedPlayerObject.spriteImg.replace('/assets', ''),
+            `/characters/${this.selectedPlayerObject.name}/${this.selectedPlayerObject.name.toLowerCase()}-sprite.png`,
             { frameWidth: this.selectedPlayerObject.name == 'Rams'?256:32, frameHeight: this.selectedPlayerObject.name == 'Rams'?256:48 }
         );
         this.load.image('heart', 'heart.png');

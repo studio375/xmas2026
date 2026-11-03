@@ -1,4 +1,4 @@
-import { Scene, Cameras, Display } from 'phaser';
+import { Scene, Cameras, Display, Physics } from 'phaser';
 import { EventBus } from '../EventBus';
 import { Character } from '@/helpers/gameData';
 import { FloorAndPlatforms } from '../entities/FloorAndPlatforms';
@@ -9,10 +9,8 @@ import { StarManager } from '../entities/StarManager';
 import { CubeManager } from '../entities/CubeManager';
 import { ASSET_KEYS, ASSET_PATHS } from '@/helpers/assets';
 import { GAME_CONFIG } from '@/helpers/gameConfig';
-import { text } from 'stream/consumers';
 import { CollectibleManager } from '../entities/CollectibleManager';
 import { UntouchableElements } from '../entities/UntouchableElements';
-import gsap from 'gsap';
 
 export class Game extends Scene
 {
@@ -45,14 +43,16 @@ export class Game extends Scene
     init(data: { selectedPlayerObject: Character })
     {
         this.selectedPlayerObject = data.selectedPlayerObject;
+        this.gameOver = false;
+        this.playerHitted = false;
     }
 
     preload ()
     {
         this.load.setPath('assets');
-        (Object.keys(ASSET_PATHS) as (keyof typeof ASSET_PATHS)[]).forEach((key) => {
-            if((key as string)!='dude' && ASSET_PATHS[key].indexOf('overlay-elements')==-1)
-                this.load.image(ASSET_KEYS[key], ASSET_PATHS[key]);
+        const imageKeys = ['ground', 'ground2', 'base', 'star', 'bomb', 'cube', 'emptyCube', 'emptyCube2', 'collectible', 'christmas_tree'] as const;
+        imageKeys.forEach(key => {
+            if (!this.textures.exists(ASSET_KEYS[key])) this.load.image(ASSET_KEYS[key], ASSET_PATHS[key]);
         });
         this.load.spritesheet(
             ASSET_KEYS.dude,
@@ -131,10 +131,6 @@ export class Game extends Scene
         this.cubeManager = new CubeManager(this, this.collectibleManager);
         this.cubeManager.create();
 
-        // events
-        EventBus.emit('current-scene-ready', this);
-        EventBus.emit('hit-a-bomb', this.playerController.sprite);
-
         // colliders
         this.physics.add.collider(this.bombManager.bombs, this.floorAndPlatforms.platforms); // bomba - piattaforma
         this.physics.add.collider(this.bombManager.bombs, this.floorAndPlatforms.floor); // bomba - pavimento
@@ -159,21 +155,25 @@ export class Game extends Scene
         this.physics.add.overlap(
             this.playerController.sprite,
             this.bombManager.bombs,
-            (player, bomb) => this.hitBomb(player, bomb),
+            () => this.hitBomb(),
             undefined,
             this
         ); // bomba - player
         this.physics.add.overlap(
-            this.starManager.stars,
             this.playerController.sprite,
-            (a, b) => this.starManager.collect(a, b),
+            this.starManager.stars,
+            (_player, star) => {
+                if (!this.gameOver && star instanceof Physics.Arcade.Sprite) this.starManager.collect(star);
+            },
             undefined,
             this
         ); // stella - player
         this.physics.add.overlap(
-            this.collectibleManager.collectibles,
             this.playerController.sprite,
-            (a, b) => this.collectibleManager.collect(a, b),
+            this.collectibleManager.collectibles,
+            (_player, collectible) => {
+                if (!this.gameOver && collectible instanceof Physics.Arcade.Sprite) this.collectibleManager.collect(collectible);
+            },
             undefined,
             this
         ); // collezionabile - player
@@ -195,24 +195,20 @@ export class Game extends Scene
         // });
         //END HELPER
 
-        this.dynamicBg(worldWidth);
-
-
-        EventBus.on('open-menu', (isOpen:boolean) => {
-            if(isOpen) this.game.pause();
-            else this.game.resume();
-        })
+        this.dynamicBg();
+        EventBus.emit('current-scene-ready', this);
     }
 
     update()
     {
-        this.playerController.update();
+        if (!this.gameOver) this.playerController.update();
     }
 
-    hitBomb(player: any, bomb: any)
+    hitBomb()
     {
-        if (this.playerHitted) return;
+        if (this.playerHitted || this.gameOver) return;
 
+        const player = this.playerController.sprite;
         player.setTint(0xff0000);
         this.playerHitted = true;
 
@@ -233,33 +229,33 @@ export class Game extends Scene
             EventBus.emit('recovered-life', this.livesManager.recoveredLives);
         }
 
-        setTimeout(() => {
+        this.time.delayedCall(GAME_CONFIG.hitInvulnerabilityMs, () => {
             player.clearTint();
             this.playerHitted = false;
-        }, GAME_CONFIG.hitInvulnerabilityMs);
+        });
     }
 
     gameOverFunc()
     {
         this.physics.pause();
+        this.playerController.sprite.setVelocity(0, 0);
         this.playerController.sprite.setTint(0xff0000);
         this.playerController.sprite.anims.play('turn');
         this.gameOver = true;
         EventBus.emit('game-over');
     }
 
-    dynamicBg(worldWidth:number){
+    dynamicBg(){
         // sfondo dietro a tutto
-        const { height } = this.scale;
         this.sky = this.add.graphics().setDepth(-1000).setScrollFactor(0);
 
-        const day   = { top: 0x4aa8ff, bottom: 0xbfe6ff };
-        const night = { top: 0x050a24, bottom: 0x1b2a5a };
+        const day = { top: Display.Color.ValueToColor(0x4aa8ff), bottom: Display.Color.ValueToColor(0xbfe6ff) };
+        const night = { top: Display.Color.ValueToColor(0x050a24), bottom: Display.Color.ValueToColor(0x1b2a5a) };
 
-        const mix = (a: number, b: number, t: number) => {
+        const mix = (a: Display.Color, b: Display.Color, t: number) => {
             const c = Display.Color.Interpolate.ColorWithColor(
-            Display.Color.ValueToColor(a),
-            Display.Color.ValueToColor(b),
+            a,
+            b,
             100,
             t * 100
             );
@@ -267,15 +263,30 @@ export class Game extends Scene
         };
 
         // 0 = giorno, 1 = notte; va avanti e indietro all'infinito
-        var state = {val:0};
-        gsap.to(state, {val:1, duration: 25, yoyo: true, repeat:-1, ease: 'sine.inOut', onUpdate: (val) => {
+        const state = {val:0};
+        let lastTop = -1;
+        let lastBottom = -1;
+        const draw = () => {
             const t = state.val;
             const top = mix(day.top, night.top, t);
             const bottom = mix(day.bottom, night.bottom, t);
 
+            if (top === lastTop && bottom === lastBottom) return;
+            lastTop = top;
+            lastBottom = bottom;
             this.sky.clear();
             this.sky.fillGradientStyle(top, top, bottom, bottom, 1);
-            this.sky.fillRect(0, 0, worldWidth, height);
-        }});
+            this.sky.fillRect(0, 0, this.scale.width, this.scale.height);
+        };
+        draw();
+        this.tweens.add({
+            targets: state,
+            val: 1,
+            duration: 25000,
+            yoyo: true,
+            repeat: -1,
+            ease: 'Sine.easeInOut',
+            onUpdate: draw,
+        });
     }
 }

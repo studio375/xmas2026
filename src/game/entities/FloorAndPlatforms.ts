@@ -1,6 +1,6 @@
 import { ASSET_KEYS } from '@/helpers/assets';
 import { GAME_POSITIONS } from '@/helpers/objectsPosition';
-import Phaser from 'phaser';
+import { Physics } from 'phaser';
 
 export class FloorAndPlatforms
 {
@@ -13,12 +13,6 @@ export class FloorAndPlatforms
     {
         this.createFloor();
         this.createPlatforms();
-    }
-
-    private getFloorY(){
-        var start = this.scene.sys.scale.height - this.scene.textures.get(ASSET_KEYS.base).getSourceImage().height;
-        this.scene.registry.set('floor-start', start);
-        return start;
     }
 
     private createFloor()
@@ -35,22 +29,22 @@ export class FloorAndPlatforms
             setScale: { x: 1, y: 1 },
             setOrigin: { x: 0, y: 0 }
         });
+        this.floor.refresh();
     }
 
     private createPlatforms()
     {
         this.platforms = this.scene.physics.add.staticGroup();
-        const startX = window.innerWidth / 2;
         GAME_POSITIONS.platforms.forEach(element => {
-            this.platforms.create(element.x, this.scene.registry.get('floor-start')-element.y, (ASSET_KEYS as keyof object)[element.key]).setOrigin(0,1).setScale(1).refreshBody();
+            this.platforms.create(element.x, this.scene.registry.get('floor-start')-element.y, ASSET_KEYS[element.key]).setOrigin(0,1).setScale(1).refreshBody();
         });
     }
 
     getTotalWidth(group: Phaser.Physics.Arcade.StaticGroup): number
     {
         let total = 0;
-        group.children.forEach((elem: any) => {
-            total += elem.displayWidth;
+        group.children.forEach(elem => {
+            if (elem instanceof Physics.Arcade.Sprite) total += elem.displayWidth;
             return true;
         });
         return total;
