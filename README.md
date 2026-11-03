@@ -32,6 +32,7 @@ This template has been updated for:
 ## Xmas 2026 gameplay and maintenance
 
 - Move with Left/Right or A/D. Jump with Up, Space or W while standing on a solid surface. Overlapping stars, balls or props does not enable jumping. Fast descent with Down or S is available only in the air.
+- The map is 8,778 pixels wide, using 22 floor tiles. Its original opening is preserved, followed by additional platform routes, block steps and collectible cubes. Terrain length and object positions are defined in [objectsPosition.ts](./src/helpers/objectsPosition.ts); camera and physics bounds follow the generated floor width.
 - Every three collected items reveal an available clue. After all clues have been revealed, collecting items no longer leaves the game paused.
 - Every character eligible as a culprit must appear in at least three distinct clues in `suspected`; the game-data regression test checks this requirement. Cri currently uses the three placeholder clues.
 - The menu and clue board pause the game. Closing the board resumes gameplay only when no other pause overlay remains open.

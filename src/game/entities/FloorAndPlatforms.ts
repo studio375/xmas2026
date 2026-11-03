@@ -20,7 +20,7 @@ export class FloorAndPlatforms
         const floorWidth = this.scene.textures.get(ASSET_KEYS.base).get().width;
         this.floor = this.scene.physics.add.staticGroup({
             key: ASSET_KEYS.base,
-            repeat: 10,
+            repeat: GAME_POSITIONS.floorTiles - 1,
             setXY: {
                 x: 0,
                 y: this.scene.registry.get('floor-start'),

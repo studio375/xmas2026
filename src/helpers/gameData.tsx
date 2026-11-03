@@ -103,5 +103,11 @@ export const GAME_DATA:GameData = {
         {id: 5, text:'Placeholder Clue', suspected: [1,2,3,4,5,6,7,8,9], exclusivityLevel: 1},
         {id: 6, text:'Placeholder Clue', suspected: [1,2,3,4,5,6,7,8,9], exclusivityLevel: 1},
         {id: 7, text:'Placeholder Clue', suspected: [1,2,3,4,5,6,7,8,9], exclusivityLevel: 1},
+        {id: 8, text:'Placeholder Clue', suspected: [1,2,3,4,5,6,7,8,9], exclusivityLevel: 1},
+        {id: 9, text:'Placeholder Clue', suspected: [1,2,3,4,5,6,7,8,9], exclusivityLevel: 1},
+        {id: 10, text:'Placeholder Clue', suspected: [1,2,3,4,5,6,7,8,9], exclusivityLevel: 1},
+        {id: 11, text:'Placeholder Clue', suspected: [1,2,3,4,5,6,7,8,9], exclusivityLevel: 1},
+        {id: 12, text:'Placeholder Clue', suspected: [1,2,3,4,5,6,7,8,9], exclusivityLevel: 1},
+        {id: 13, text:'Placeholder Clue', suspected: [1,2,3,4,5,6,7,8,9], exclusivityLevel: 1},
     ]
 }

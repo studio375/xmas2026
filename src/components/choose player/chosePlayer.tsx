@@ -27,7 +27,7 @@ export default function ChoosePlayer(){
         const guilty = suspects[Math.floor(Math.random() * suspects.length)];
         const currentClues: ClueVariable[] = [];
         const newUsedClues:number[] = [];
-        for (let index = 0; index < 3; index++) {
+        for (let index = 0; index < 8; index++) {
     
             const newClue = pickRandomClue(newUsedClues, guilty.id);
     

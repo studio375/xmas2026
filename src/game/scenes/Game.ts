@@ -50,7 +50,7 @@ export class Game extends Scene
     preload ()
     {
         this.load.setPath('assets');
-        const imageKeys = ['ground', 'ground2', 'base', 'star', 'bomb', 'cube', 'emptyCube', 'emptyCube2', 'collectible', 'christmas_tree'] as const;
+        const imageKeys = ['ground', 'ground2', 'base', 'star', 'bomb', 'cube', 'emptyCube', 'emptyCube2', 'collectible', 'christmas_tree', 'igloo'] as const;
         imageKeys.forEach(key => {
             if (!this.textures.exists(ASSET_KEYS[key])) this.load.image(ASSET_KEYS[key], ASSET_PATHS[key]);
         });
