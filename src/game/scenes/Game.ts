@@ -11,6 +11,7 @@ import { ASSET_KEYS, ASSET_PATHS } from '@/helpers/assets';
 import { GAME_CONFIG } from '@/helpers/gameConfig';
 import { CollectibleManager } from '../entities/CollectibleManager';
 import { UntouchableElements } from '../entities/UntouchableElements';
+import { useStore } from '@/store/useStore';
 
 export class Game extends Scene
 {
@@ -98,10 +99,10 @@ export class Game extends Scene
         this.starManager = new StarManager(
             this,
             () => {
+                this.bombManager.registerCollection();
                 if(this.starManager.score == 3){
                     this.livesManager.livesCounter+=1;
                     EventBus.emit('update-lives', this.livesManager.livesCounter)
-                    this.bombManager.addBomb();
                     this.starManager.score = 0;
                 }
             },
@@ -116,7 +117,7 @@ export class Game extends Scene
                 this.playerController.sprite.anims.play('turn');
                 EventBus.emit('show-clue', this);
             },
-            () => {this.bombManager.addBomb();}
+            () => {this.bombManager.registerCollection();}
         );
         this.collectibleManager.create();
 
@@ -124,7 +125,8 @@ export class Game extends Scene
         this.livesManager = new LivesManager(this);
 
         // bombe
-        this.bombManager = new BombManager(this, this.playerController.sprite);
+        const difficulty = useStore.getState().difficulty;
+        this.bombManager = new BombManager(this, this.playerController.sprite, GAME_CONFIG.bombEveryX[difficulty]);
         this.bombManager.create();
 
         // cubo

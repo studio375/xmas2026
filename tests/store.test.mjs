@@ -29,7 +29,7 @@ test('resetting clears the investigation, progress and open overlays', () => {
     useStore.getState().resetGame();
 
     const state = useStore.getState();
-    assert.equal(state.gameStep, 'choose player');
+    assert.equal(state.gameStep, 'intro');
     assert.equal(state.selectedPlayer, null);
     assert.equal(state.guilty, null);
     assert.equal(state.menuOpen, false);
@@ -37,6 +37,15 @@ test('resetting clears the investigation, progress and open overlays', () => {
     assert.deepEqual(state.clues, []);
     assert.deepEqual(state.showComponents, []);
     assert.equal(typeof state.startGame, 'function');
+});
+
+test('selected difficulty is kept when a game starts and resets to medium on restart', () => {
+    useStore.getState().setDifficulty('hard');
+    useStore.getState().startGame(player, guilty, clues);
+    assert.equal(useStore.getState().difficulty, 'hard');
+
+    useStore.getState().resetGame();
+    assert.equal(useStore.getState().difficulty, 'medium');
 });
 
 test('starting another game resets old progress without mutating supplied clues', () => {

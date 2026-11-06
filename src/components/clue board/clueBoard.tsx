@@ -3,13 +3,15 @@ import { useStore } from "@/store/useStore";
 import Image from "next/image";
 import { useLayoutEffect, useRef, useState } from "react";
 import CluePreview from "./cluePreview";
+import Button from "../button";
 
 interface ClueBoardProps {
     handleClickButton: () => void;
+    handleGoToSuspects: () => void;
     openedByMenu?: boolean;
 }
 
-export default function ClueBoard({handleClickButton, openedByMenu = false}: ClueBoardProps){
+export default function ClueBoard({handleClickButton, handleGoToSuspects, openedByMenu = false}: ClueBoardProps){
     const clues = useStore(state => state.clues);
     const clueIndex = useStore(state => state.clueIndex);
     const hasNewClue = !openedByMenu && clueIndex < clues.length;
@@ -44,6 +46,9 @@ export default function ClueBoard({handleClickButton, openedByMenu = false}: Clu
             getTarget={() => slots.current[expandedIndex]}
             onReturn={returnToBoard}
         />}
-        <button type="button" autoFocus={expandedIndex === null} tabIndex={expandedIndex === null ? 0 : -1} aria-label="Chiudi lavagna" onClick={handleClickButton} className="board-close cursor-pointer"><Image src={'/assets/close.svg'} width={40} height={40} alt="" /></button>
+        {openedByMenu && (
+            <button type="button" autoFocus={expandedIndex === null} tabIndex={expandedIndex === null ? 0 : -1} aria-label="Chiudi lavagna" onClick={handleClickButton} className="board-close cursor-pointer"><Image src={'/assets/close.svg'} width={40} height={40} alt="" /></button>
+        )}
+        <Button onClick={handleGoToSuspects} className="absolute bottom-[5dvh] left-1/2 -translate-x-1/2">Vai ai sospettati</Button>
     </div>
 }

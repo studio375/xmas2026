@@ -5,13 +5,13 @@ import Button from "../button";
 import React, { useState } from "react";
 import PlayersGallery from "./playersGallery";
 import PlayerDescription from "./playerDescription";
-
+import SetDifficulty from "./setDifficulty";
 
 
 export default function ChoosePlayer(){
     const startGame = useStore(state => state.startGame);
     const [character, setCharacter] = useState <Character>(GAME_DATA.characters[0]);
-
+    const [step, setStep] = useState<number>(0);
     const pickRandomClue = (used: number[], guiltyId:number) => {
 
         const possibleClues = GAME_DATA.clues.filter((elem: ClueVariable, ) => {
@@ -40,12 +40,16 @@ export default function ChoosePlayer(){
         startGame(character, guilty, currentClues);
     };
 
-    return <section className="character-selection flex flex-col items-center gap-5 md:gap-10 w-screen max-h-dvh overflow-y-auto px-[5vw] py-4 relative">
-        <ArcadeText>Seleziona un personaggio</ArcadeText>
-        <div className="character-selection-content flex flex-col md:flex-row items-center gap-3 w-full relative justify-between">
-            <PlayersGallery characters={GAME_DATA.characters} onSlideChange={(char:Character) => {setCharacter(char)}} />
-            <PlayerDescription character={character} />
-        </div>
-        <Button onClick={handleChoose}>Start game</Button>
+    return <section className={`${step === 0 ? "character-selection" : "h-screen justify-center"} w-screen max-h-dvh flex flex-col items-center gap-5 md:gap-10 overflow-y-auto px-[5vw] py-4 relative`}>
+        {
+            step === 0 ? <><ArcadeText>Seleziona un personaggio</ArcadeText>
+            <div className="character-selection-content flex flex-col md:flex-row items-center gap-3 w-full relative justify-between">
+                <PlayersGallery characters={GAME_DATA.characters} onSlideChange={(char:Character) => {setCharacter(char)}} />
+                <PlayerDescription character={character} />
+            </div></> : <SetDifficulty />
+        }
+        {
+            step === 0 ? <Button onClick={() => setStep(1)}>Avanti</Button> : <Button onClick={handleChoose}>Start Game</Button>
+        }
     </section>
 }

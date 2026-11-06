@@ -1,3 +1,5 @@
+export type Difficulty = 'easy' | 'medium' | 'hard';
+
 export const GAME_CONFIG = {
     playerSpeed: 300,
     jumpVelocity: -600,
@@ -15,5 +17,11 @@ export const GAME_CONFIG = {
 
     hitInvulnerabilityMs: 2000,
 
-    maxRecoverableLives:3
+    maxRecoverableLives:3,
+
+    bombEveryX: {
+        easy: 3,
+        medium: 2,
+        hard: 1,
+    } satisfies Record<Difficulty, number>,
 };

@@ -5,9 +5,14 @@ import { GAME_CONFIG } from '@/helpers/gameConfig';
 export class BombManager
 {
     bombs: Phaser.Physics.Arcade.Group;
+    private collectedSinceBomb = 0;
 
-    constructor(private scene: Phaser.Scene, private player: Phaser.Physics.Arcade.Sprite) {}
-
+    constructor(
+        private scene: Phaser.Scene,
+        private player: Phaser.Physics.Arcade.Sprite,
+        private bombEveryX: number,
+    ) {}
+    
     create()
     {
         this.bombs = this.scene.physics.add.group();
@@ -28,5 +33,14 @@ export class BombManager
         bomb.setBounce(Math.FloatBetween(minBounce, maxBounce));
         bomb.setCollideWorldBounds(true);
         bomb.setVelocity(Math.Between(minVelX, maxVelX), Math.Between(minVelY, maxVelY));
+    }
+
+    registerCollection()
+    {
+        this.collectedSinceBomb += 1;
+        if (this.collectedSinceBomb >= this.bombEveryX) {
+            this.addBomb();
+            this.collectedSinceBomb = 0;
+        }
     }
 }
