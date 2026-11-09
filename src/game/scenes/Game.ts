@@ -51,9 +51,12 @@ export class Game extends Scene
     preload ()
     {
         this.load.setPath('assets');
-        const imageKeys = ['ground', 'ground2', 'base', 'star', 'bomb', 'cube', 'emptyCube', 'emptyCube2', 'collectible', 'christmas_tree', 'igloo'] as const;
+        const imageKeys = Object.keys(ASSET_KEYS) as (keyof typeof ASSET_KEYS)[];
         imageKeys.forEach(key => {
-            if (!this.textures.exists(ASSET_KEYS[key])) this.load.image(ASSET_KEYS[key], ASSET_PATHS[key]);
+            if (key === 'dude') return;
+            var path = ASSET_PATHS[key];
+            if (!this.textures.exists(ASSET_KEYS[key]) && path && !path.includes('overlay-elements')) 
+                this.load.image(ASSET_KEYS[key], path);
         });
         this.load.spritesheet(
             ASSET_KEYS.dude,
@@ -78,15 +81,20 @@ export class Game extends Scene
 
 
         //elementi di sfondo
-        this.untouchableElements = new UntouchableElements(this);
-        this.untouchableElements.create();
+        // this.untouchableElements = new UntouchableElements(this);
+        // this.untouchableElements.create();
 
         // pavimento e piattaforme
         this.floorAndPlatforms = new FloorAndPlatforms(this);
         this.floorAndPlatforms.create();
         const worldWidth = this.floorAndPlatforms.getTotalWidth(this.floorAndPlatforms.floor);
         this.physics.world.setBounds(0, -this.sys.scale.height, worldWidth, this.sys.scale.height * 2);
+        this.registry.set('world-width', worldWidth);
 
+        //elementi di sfondo
+        this.untouchableElements = new UntouchableElements(this);
+        this.untouchableElements.create();
+        
         // omino
         this.playerController = new PlayerController(this, this.selectedPlayerObject);
         this.playerController.create();

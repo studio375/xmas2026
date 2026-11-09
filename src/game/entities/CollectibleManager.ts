@@ -37,6 +37,8 @@ export class CollectibleManager
 
     spawnCollectibleAt(x: number, y: number)
     {
-        this.collectibles?.create(x, y, ASSET_KEYS.collectible);
+        const collectibleKeys = [ASSET_KEYS.collectible, ASSET_KEYS.collectible2, ASSET_KEYS.collectible3];
+        const randomKey = collectibleKeys[Math.floor(Math.random() * collectibleKeys.length)];
+        this.collectibles?.create(x, y, randomKey);
     }
 }

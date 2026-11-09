@@ -12,8 +12,13 @@ export const ASSET_KEYS = {
     heart: 'heart',
     emptyHeart: 'empty-heart',
     collectible: 'prop',
+    collectible2: 'prop-2',
+    collectible3: 'prop-3',
     christmas_tree: 'christmas-tree',
-    igloo: 'igloo'
+    igloo: 'igloo',
+    cloud: 'cloud',
+    cloud2: 'cloud-2',
+    cloud3: 'cloud-3',
 } as const;
 
 export type AssetKey = keyof typeof ASSET_KEYS;
@@ -30,8 +35,13 @@ export const ASSET_PATHS = {
     emptyCube2: '/cubes/cubo.png',
     heart: '/assets/overlay-elements/heart.png',
     emptyHeart: '/assets/overlay-elements/empty-heart.png',
-    collectible: '/game-components/prop.png',
+    collectible: '/game-components/props/prop.png',
+    collectible2: '/game-components/props/prop-2.png',
+    collectible3: '/game-components/props/prop-3.png',
     christmas_tree:'/bg-elements/christmas-tree.png',
     igloo: '/bg-elements/igloo.png',
-    hamburger_menu:'/assets/overlay-elements/hamburger-menu.svg'
+    hamburger_menu:'/assets/overlay-elements/hamburger-menu.svg',
+    cloud: '/bg-elements/cloud.png',
+    cloud2: '/bg-elements/cloud-2.png',
+    cloud3: '/bg-elements/cloud-3.png',
 } as const satisfies Record<Exclude<AssetKey, 'dude'> | 'hamburger_menu', string>;
