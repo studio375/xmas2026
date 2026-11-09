@@ -28,6 +28,7 @@ export class UntouchableElements{
                 index--; // riprovo con un nuovo posizionamento della nuvola
             }
         }
+        
 
         GAME_POSITIONS.untouchableElements.forEach(elem => {
             var y = this.scene.registry.get('floor-start')-elem.y;
