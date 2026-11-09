@@ -1,6 +1,6 @@
 import Head from "next/head";
 import dynamic from "next/dynamic";
-import { Press_Start_2P, Permanent_Marker, Fuzzy_Bubbles } from 'next/font/google';
+import { Press_Start_2P, Permanent_Marker, Fuzzy_Bubbles, Berkshire_Swash } from 'next/font/google';
 
 const press_start = Press_Start_2P({
     weight: '400',
@@ -17,6 +17,11 @@ const fuzzy_bubbles = Fuzzy_Bubbles({
     variable: '--font-fuzzy',
     subsets: ['latin'],
 });
+const berkshire_swash = Berkshire_Swash({
+    weight: '400',
+    variable: '--font-swash',
+    subsets: ['latin'],
+});
 
 const AppWithoutSSR = dynamic(() => import("@/App"), { ssr: false });
 
@@ -29,7 +34,7 @@ export default function Home() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.png" />
             </Head>
-            <main className={`${press_start.variable} ${permanent_marker.variable} ${fuzzy_bubbles.variable}`}>
+            <main className={`${press_start.variable} ${permanent_marker.variable} ${fuzzy_bubbles.variable} ${berkshire_swash.variable}`}>
                 <AppWithoutSSR />
             </main>
         </>

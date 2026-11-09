@@ -9,6 +9,7 @@
     --font-press: var(--font-press);
     --font-marker: var(--font-marker);
     --font-fuzzy: var(--font-fuzzy);
+    --font-swash: var(--font-swash);
 
     //responsive
     // --breakpoint-2xl: 2000px;
@@ -35,6 +36,9 @@ body {
 }
 .font-fuzzy{
     font-family: var(--font-fuzzy);
+}
+.font-swash{
+    font-family: var(--font-swash);
 }
 
 .button-style {

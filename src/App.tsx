@@ -8,6 +8,8 @@ import GameOverlay from './components/game overlay/gameOverlay';
 import SuspectedSection from './components/suspectedSection';
 import { useShallow } from 'zustand/react/shallow';
 import Intro from './components/intro/intro';
+import CountDown from './components/countdown';
+import EntryPage from './components/intro/entrypage';
 
 function App()
 {
@@ -26,9 +28,9 @@ function App()
     const boardOpenedByMenu = showComponents.includes('clues');
     const suspectedOpened = showComponents.includes('suspected');
     const sectionOpen = menuOpen || showClue || boardOpenedByMenu || suspectedOpened;
-    const [countdown, setCountdown] = useState<number | null>(null);
+    const [countdown, setCountdown] = useState<number>(0);
     const previousSectionOpen = useRef(sectionOpen);
-    const paused = sectionOpen || countdown !== null;
+    const paused = sectionOpen || countdown !== 0;
 
     useLayoutEffect(() => {
         if (previousSectionOpen.current && !sectionOpen) {
@@ -36,14 +38,6 @@ function App()
         }
         previousSectionOpen.current = sectionOpen;
     }, [sectionOpen]);
-
-    useEffect(() => {
-        if (countdown === null) return;
-        const timer = window.setTimeout(() => {
-            setCountdown(countdown === 1 ? null : countdown - 1);
-        }, 1000);
-        return () => window.clearTimeout(timer);
-    }, [countdown]);
 
     useEffect(() => {
         const handleShowClue = () => {
@@ -58,12 +52,14 @@ function App()
             EventBus.removeListener('show-clue', handleShowClue);
         }
     }, [clueIndex, clues, paused])
+
     useEffect(() => useStore.subscribe((state, previousState) => {
         if (state.gameStep === 'intro' && state.gameStep !== previousState.gameStep) {
             setShowClue(false);
-            setCountdown(null);
+            setCountdown(0);
         }
     }), []);
+
     const handleCloseBoard = (openSuspects = false) => {
         const newIndex = showClue ? clueIndex + 1 : clueIndex;
         setShowClue(false); 
@@ -83,13 +79,10 @@ function App()
                     openedByMenu={!showClue}
                 />
             )}
-            {gameStep == 'intro' && <><Intro /><ChoosePlayer /></> }
+            {gameStep == 'intro' && <><EntryPage /><Intro /><ChoosePlayer /></> }
             {gameStep == 'start' && <><PhaserGame ref={phaserRef} paused={paused} /><GameOverlay /></>}
-            {gameStep === 'start' && countdown !== null && (
-                <div className="fixed z-20 flex flex-col items-center justify-center gap-5 bg-[#000000aa] w-screen h-screen left-0 top-0" role="status" aria-live="assertive" aria-atomic="true">
-                    <span className="text-white text-[20px]/[25px] font-press">La partita riprende tra</span>
-                    <span className="text-white text-[50px]/[55px] font-press">{countdown}</span>
-                </div>
+            {gameStep === 'start' && countdown !== 0 && (
+                <CountDown count={countdown} setCount={setCountdown} />
             )}
         </div>
     )

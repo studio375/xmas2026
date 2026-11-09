@@ -22,7 +22,12 @@ export default function SetDifficulty() {
                         onClick={() => setDifficulty(option.value)}
                     >
                         {option.label}
-                        <span>{GAME_CONFIG.bombEveryX[option.value]} collezionabili per bomba</span>
+                        <span>
+                            {
+                                option.value == "easy" ? 'Si aggiungerà una pallina da schivare ogni ' + GAME_CONFIG.bombEveryX[option.value] + ' collezionabili raccolti' : 'Si aggiungerà una pallina da schivare ogni collezionabile raccolto'
+                            }
+                        </span>
+                        {}
                     </button>
                 ))}
             </div>
