@@ -40,7 +40,7 @@ export default function ChoosePlayer(){
         startGame(character, guilty, currentClues);
     };
 
-    return <section className={`${step === 0 ? "character-selection" : "h-screen justify-center"} w-screen max-h-dvh flex flex-col items-center gap-5 md:gap-10 overflow-y-auto px-[5vw] py-4 relative`}>
+    return <section className={`classic-bg ${step === 0 ? "character-selection" : "h-screen justify-center"} w-screen max-h-dvh flex flex-col items-center gap-5 md:gap-10 overflow-y-auto px-[5vw] py-4 relative`}>
         {
             step === 0 ? <><ArcadeText>Seleziona un personaggio</ArcadeText>
             <div className="character-selection-content flex flex-col md:flex-row items-center gap-3 w-full relative justify-between">

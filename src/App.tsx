@@ -10,6 +10,7 @@ import { useShallow } from 'zustand/react/shallow';
 import Intro from './components/intro/intro';
 import CountDown from './components/countdown';
 import EntryPage from './components/intro/entrypage';
+import ChooseGuiltyPage from './components/chooseGuiltyPage';
 
 function App()
 {
@@ -47,9 +48,12 @@ function App()
             }
             setShowClue(true);
         }
+        const handleCloseClue = () => setShowClue(false);
         EventBus.on('show-clue', handleShowClue);
+        EventBus.on('close-clue', handleCloseClue);
         return () => {
             EventBus.removeListener('show-clue', handleShowClue);
+            EventBus.removeListener('close-clue', handleCloseClue);
         }
     }, [clueIndex, clues, paused])
 
@@ -71,19 +75,31 @@ function App()
     }
     return (
         <div id="app">
-            {gameStep === 'start' && suspectedOpened && <SuspectedSection onClose={handleCloseSuspects} />}
-            {gameStep === 'start' && (showClue || boardOpenedByMenu) && (
+            
+            {/* ENTRY PAGE */}
+            {gameStep === 'intro' && <><EntryPage /><Intro /><ChoosePlayer /></> }
+            
+            {/* SUSPECTED SECTION AND CLUE BOARD */}
+            {(gameStep !== 'intro') && suspectedOpened && <SuspectedSection onClose={handleCloseSuspects} />}
+            {(gameStep !== 'intro') && (showClue || boardOpenedByMenu) && (
                 <ClueBoard
                     handleClickButton={() => handleCloseBoard(false)}
                     handleGoToSuspects={() => handleCloseBoard(true)}
                     openedByMenu={!showClue}
                 />
             )}
-            {gameStep == 'intro' && <><EntryPage /><Intro /><ChoosePlayer /></> }
-            {gameStep == 'start' && <><PhaserGame ref={phaserRef} paused={paused} /><GameOverlay /></>}
+            
+            {/* PHASER GAME SECTION */}
+            {gameStep === 'start' && <div className={`absolute w-full h-full`}><PhaserGame ref={phaserRef} paused={paused} /></div>}
             {gameStep === 'start' && countdown !== 0 && (
                 <CountDown count={countdown} setCount={setCountdown} />
             )}
+
+            {/* CHOOSE GUILTY PAGE */}
+            {gameStep === 'chooseGuilty' && <ChooseGuiltyPage />}
+
+            {/* GAME OVERLAY */}
+            {gameStep !== 'intro' && <GameOverlay />}
         </div>
     )
 }

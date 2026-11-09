@@ -4,9 +4,10 @@ import { create } from "zustand";
 
 export type SuspectStatus = 'neutral' | 'excluded' | 'suspected';
 type GameOverlay = 'clues' | 'suspected';
+type GameStep = 'intro' | 'start' | 'chooseGuilty';
 
 interface GameSession {
-   gameStep: 'intro' | 'start';
+   gameStep: GameStep;
    showComponents: GameOverlay[];
    suspectStatuses: Partial<Record<number, SuspectStatus>>; //crea come un oggetto con chiavi numeriche e valori di tipo SuspectStatus. Es. { 1: 'neutral', 2: 'excluded' }
    menuOpen: boolean;
@@ -19,6 +20,7 @@ interface GameSession {
 
 interface GameState extends GameSession {
    setShowComponents: (components: GameOverlay[]) => void;
+   setGameStep: (gameStep: GameStep) => void;
    setDifficulty: (difficulty: Difficulty) => void;
    cycleSuspect: (characterId: number) => void;
    setMenuOpen: (open: boolean) => void;
@@ -59,4 +61,5 @@ export const useStore = create<GameState>((set) => ({
       difficulty: state.difficulty,
    })),
    resetGame: () => set(initialState),
+   setGameStep: (gameStep) => set({gameStep}),
 }));

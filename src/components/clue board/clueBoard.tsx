@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useLayoutEffect, useRef, useState } from "react";
 import CluePreview from "./cluePreview";
 import Button from "../button";
+import ChooseGuiltyPopup from "../chooseGuiltyPopup";
 
 interface ClueBoardProps {
     handleClickButton: () => void;
@@ -33,11 +34,12 @@ export default function ClueBoard({handleClickButton, handleGoToSuspects, opened
     return <div role="dialog" aria-modal="true" aria-label="Lavagna degli indizi" className="clue-board-screen fixed inset-0 bg-[#000000aa] z-10">
         <Board
             clues={clues}
-            visibleCount={clueIndex + (hasNewClue && attached ? 1 : 0)}
+            visibleCount={clueIndex + ((hasNewClue && attached) ? 1 : 0)}
             expandedIndex={expandedIndex}
             onSelect={setExpandedIndex}
             setSlot={(index, element) => { slots.current[index] = element; }}
         />
+        {(expandedIndex == null && clueIndex == 7 && !openedByMenu) && <ChooseGuiltyPopup />}
         {expandedIndex !== null && <CluePreview
             key={clues[expandedIndex].id}
             obj={clues[expandedIndex]}
