@@ -70,6 +70,7 @@ export class Game extends Scene
 
     create ()
     {
+        const isMainGame = useStore.getState().gameStep == 'start';
         var start = this.sys.scale.height - this.textures.get(ASSET_KEYS.base).getSourceImage().height;
         this.registry.set('floor-start', start);
 
@@ -100,8 +101,10 @@ export class Game extends Scene
         this.playerController.create();
 
         // camera
-        this.camera.setBounds(0, -this.sys.scale.height, worldWidth, this.sys.scale.height*2, true);
-        this.camera.startFollow(this.playerController.sprite, true, 1, 0.05);
+        if(isMainGame){
+            this.camera.setBounds(0, -this.sys.scale.height, worldWidth, this.sys.scale.height*2, true);
+            this.camera.startFollow(this.playerController.sprite, true, 1, 0.05);
+        }
 
         // stelle
         this.starManager = new StarManager(
@@ -133,60 +136,70 @@ export class Game extends Scene
         this.livesManager = new LivesManager(this);
 
         // bombe
-        const difficulty = useStore.getState().difficulty;
-        this.bombManager = new BombManager(this, this.playerController.sprite, GAME_CONFIG.bombEveryX[difficulty]);
-        this.bombManager.create();
+        if(isMainGame){
+            const difficulty = useStore.getState().difficulty;
+            this.bombManager = new BombManager(this, this.playerController.sprite, GAME_CONFIG.bombEveryX[difficulty]);
+            this.bombManager.create();
+        }
 
         // cubo
-        this.cubeManager = new CubeManager(this, this.collectibleManager);
-        this.cubeManager.create();
+        if(isMainGame){
+            this.cubeManager = new CubeManager(this, this.collectibleManager);
+            this.cubeManager.create();
+        }
 
         // colliders
-        this.physics.add.collider(this.bombManager.bombs, this.floorAndPlatforms.platforms); // bomba - piattaforma
-        this.physics.add.collider(this.bombManager.bombs, this.floorAndPlatforms.floor); // bomba - pavimento
-        this.physics.add.collider(this.bombManager.bombs, this.cubeManager.cubes); // bomba - cubo
-        this.physics.add.collider(
-            this.cubeManager.cubes,
-            this.playerController.sprite,
-            (a, b) => this.cubeManager.hit(a, b, this.playerController.sprite),
-            undefined,
-            this
-        ); // cubo - player
-        this.physics.add.collider(this.starManager.stars, this.floorAndPlatforms.platforms); // stella - piattaforma
-        this.physics.add.collider(this.starManager.stars, this.floorAndPlatforms.floor); // stella - pavimento
-        this.physics.add.collider(this.starManager.stars, this.cubeManager.cubes); // stella - cubo
+        if(isMainGame){ //elementi per cui prevedere un collider solo quando siamo nel gioco principale
+            this.physics.add.collider(this.bombManager.bombs, this.floorAndPlatforms.platforms); // bomba - piattaforma
+            this.physics.add.collider(this.bombManager.bombs, this.floorAndPlatforms.floor); // bomba - pavimento
+            this.physics.add.collider(this.bombManager.bombs, this.cubeManager.cubes); // bomba - cubo
+            this.physics.add.collider(
+                this.cubeManager.cubes,
+                this.playerController.sprite,
+                (a, b) => this.cubeManager.hit(a, b, this.playerController.sprite),
+                undefined,
+                this
+            ); // cubo - player
+            this.physics.add.collider(this.starManager.stars, this.floorAndPlatforms.platforms); // stella - piattaforma
+            this.physics.add.collider(this.starManager.stars, this.floorAndPlatforms.floor); // stella - pavimento
+            this.physics.add.collider(this.starManager.stars, this.cubeManager.cubes); // stella - cubo
+            this.physics.add.collider(this.collectibleManager.collectibles, this.floorAndPlatforms.platforms);
+            this.physics.add.collider(this.collectibleManager.collectibles, this.floorAndPlatforms.floor);
+            this.physics.add.collider(this.collectibleManager.collectibles, this.cubeManager.cubes);
+        }
         this.physics.add.collider(this.playerController.sprite, this.floorAndPlatforms.platforms); // player - piattaforma
         this.physics.add.collider(this.floorAndPlatforms.floor, this.playerController.sprite); // player - pavimenti
-        this.physics.add.collider(this.collectibleManager.collectibles, this.floorAndPlatforms.platforms);
-        this.physics.add.collider(this.collectibleManager.collectibles, this.floorAndPlatforms.floor);
-        this.physics.add.collider(this.collectibleManager.collectibles, this.cubeManager.cubes);
+        
 
         // overlaps
-        this.physics.add.overlap(
-            this.playerController.sprite,
-            this.bombManager.bombs,
-            () => this.hitBomb(),
-            undefined,
-            this
-        ); // bomba - player
-        this.physics.add.overlap(
-            this.playerController.sprite,
-            this.starManager.stars,
-            (_player, star) => {
-                if (!this.gameOver && star instanceof Physics.Arcade.Sprite) this.starManager.collect(star);
-            },
-            undefined,
-            this
-        ); // stella - player
-        this.physics.add.overlap(
-            this.playerController.sprite,
-            this.collectibleManager.collectibles,
-            (_player, collectible) => {
-                if (!this.gameOver && collectible instanceof Physics.Arcade.Sprite) this.collectibleManager.collect(collectible);
-            },
-            undefined,
-            this
-        ); // collezionabile - player
+        if(isMainGame){
+            this.physics.add.overlap(
+                this.playerController.sprite,
+                this.bombManager.bombs,
+                () => this.hitBomb(),
+                undefined,
+                this
+            ); // bomba - player
+            this.physics.add.overlap(
+                this.playerController.sprite,
+                this.starManager.stars,
+                (_player, star) => {
+                    if (!this.gameOver && star instanceof Physics.Arcade.Sprite) this.starManager.collect(star);
+                },
+                undefined,
+                this
+            ); // stella - player
+            this.physics.add.overlap(
+                this.playerController.sprite,
+                this.collectibleManager.collectibles,
+                (_player, collectible) => {
+                    if (!this.gameOver && collectible instanceof Physics.Arcade.Sprite) this.collectibleManager.collect(collectible);
+                },
+                undefined,
+                this
+            ); // collezionabile - player
+        }
+        
 
 
         //HELPER

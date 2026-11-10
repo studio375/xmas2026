@@ -16,10 +16,10 @@ export class BombManager
     create()
     {
         this.bombs = this.scene.physics.add.group();
-        this.addBomb();
+        this.addBomb(true);
     }
 
-    addBomb()
+    addBomb(isFirst: boolean = false)
     {
         const bomb = this.bombs.create(
             this.player.x + this.scene.cameras.main.worldView.width / 2,
@@ -30,9 +30,11 @@ export class BombManager
         const [minBounce, maxBounce] = GAME_CONFIG.bombBounceLimits;
         const [minVelX, maxVelX] = GAME_CONFIG.bombVelocityXLimits;
         const [minVelY, maxVelY] = GAME_CONFIG.bombVelocityYLimits;
+        var velX = Math.Between(minVelX, maxVelX); 
+        if (isFirst) velX*=-1;
         bomb.setBounce(Math.FloatBetween(minBounce, maxBounce));
         bomb.setCollideWorldBounds(true);
-        bomb.setVelocity(Math.Between(minVelX, maxVelX), Math.Between(minVelY, maxVelY));
+        bomb.setVelocity(velX, Math.Between(minVelY, maxVelY));
     }
 
     registerCollection()

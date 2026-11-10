@@ -2,6 +2,7 @@ import Phaser, {Input} from 'phaser';
 import { Character } from '@/helpers/gameData';
 import { ASSET_KEYS } from '@/helpers/assets';
 import { GAME_CONFIG } from '@/helpers/gameConfig';
+import { useStore } from '@/store/useStore';
 
 
 export class PlayerController
@@ -12,15 +13,18 @@ export class PlayerController
     keyS: Phaser.Input.Keyboard.Key;
     keyD: Phaser.Input.Keyboard.Key;
     keyW: Phaser.Input.Keyboard.Key;
+    isMainGame = useStore.getState().gameStep == 'start';
 
     constructor(private scene: Phaser.Scene, private character: Character) {}
 
     create()
     {
-        this.sprite = this.scene.physics.add.sprite(0, 350, ASSET_KEYS.dude);
+        var startJumpHeight = (this.isMainGame)?100:0;
+        var startX = (this.isMainGame)?0:-200;
+        this.sprite = this.scene.physics.add.sprite(startX, this.scene.registry.get('floor-start')-startJumpHeight, ASSET_KEYS.dude).setOrigin(0, 1);
         this.sprite.setCollideWorldBounds(true);
         this.sprite.setScale(0.5);
-        this.sprite.setGravityY(GAME_CONFIG.playerGravityY);
+        //this.sprite.setGravityY(GAME_CONFIG.playerGravityY);
         this.sprite.body?.updateFromGameObject();
 
         this.createAnimations();

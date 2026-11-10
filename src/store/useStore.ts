@@ -4,7 +4,7 @@ import { create } from "zustand";
 
 export type SuspectStatus = 'neutral' | 'excluded' | 'suspected';
 type GameOverlay = 'clues' | 'suspected';
-type GameStep = 'intro' | 'start' | 'chooseGuilty';
+type GameStep = 'intro' | 'start' | 'chooseGuilty' | 'revealGuilty';
 
 interface GameSession {
    gameStep: GameStep;
@@ -16,6 +16,7 @@ interface GameSession {
    clueIndex: number;
    guilty: Character | null;
    difficulty: Difficulty;
+   selectedGuilty: Character | null;
 }
 
 interface GameState extends GameSession {
@@ -26,7 +27,9 @@ interface GameState extends GameSession {
    setMenuOpen: (open: boolean) => void;
    setClueIndex: (index: number) => void;
    startGame: (player: Character, guilty: Character, clues: ClueVariable[]) => void;
+   restartGame: () => void;
    resetGame: () => void;
+   setSelectedGuilty: (character: Character | null) => void;
 }
 
 const initialState: GameSession = {
@@ -39,12 +42,14 @@ const initialState: GameSession = {
    clueIndex: 0,
    guilty: null,
    difficulty: 'medium',
+   selectedGuilty: null,
 };
 
 export const useStore = create<GameState>((set) => ({
    ...initialState,
    setShowComponents: (showComponents) => set({showComponents}),
    setDifficulty: (difficulty) => set({difficulty}),
+   setSelectedGuilty: (selectedGuilty) => set({selectedGuilty}),
    cycleSuspect: (characterId) => set(state => { //state è la variabile di set che sta è a disposizione per leggere lo stato corrente della variabile suspectStatuses
       const current = state.suspectStatuses[characterId] ?? 'neutral';
       const next: SuspectStatus = current === 'neutral' ? 'excluded' : current === 'excluded' ? 'suspected' : 'neutral';
@@ -62,4 +67,9 @@ export const useStore = create<GameState>((set) => ({
    })),
    resetGame: () => set(initialState),
    setGameStep: (gameStep) => set({gameStep}),
+   restartGame: () => set(state => ({
+      ...initialState,
+      selectedPlayer: state.guilty,
+      gameStep: 'revealGuilty',
+   })),
 }));

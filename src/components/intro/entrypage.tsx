@@ -1,6 +1,7 @@
 import Button from "../button";
 import { useEffect, useRef } from "react";
 import { gsap, SplitText } from "../../helpers/gsap";
+import Background from "../background";
 
 export default function EntryPage() {
     const ref = useRef<any>(null);
@@ -36,7 +37,8 @@ export default function EntryPage() {
         } });
     }
     return (
-        <div ref={ref} className="classic-bg w-screen h-screen flex flex-col items-center justify-center absolute bg-black z-100 gap-4">
+        <div ref={ref} className="classic-bg w-screen h-screen flex flex-col items-center justify-center absolute z-100 gap-4">
+            <Background />  
             <div className="h-22 flex items-end">
                 <h1 ref={titleRef} className="font-swash text-[100px]/[95px] text-center whitespace-nowrap opacity-100 [&>.single-char]:opacity-0">Chi ha rapito Babbo Natale?</h1>
             </div>

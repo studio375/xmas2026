@@ -375,7 +375,7 @@ body {
 }
 
 .suspected-section {
-    padding: 5dvh 4vw;
+    padding: 3dvh 4vw;
     background: #000a;
 }
 
@@ -627,20 +627,22 @@ body {
 
 
 
-.classic-bg {
-  background: linear-gradient(-45deg, #CC0597, #11BAFF, #030A09 80%);
-  background-size:200% 200%;
-  animation: gradient 15s ease infinite;
+.classic-bg-1 {
+    inset: 0; overflow: hidden; background: #000000;
+    .beam {
+        position: absolute; top: -40%; height: 180%; width: 34vw; filter: blur(48px); mix-blend-mode: screen; opacity: 0.55; transform-origin: top center; will-change: transform, opacity;
+        &.beam1 { left: 8%;  background: linear-gradient(to bottom, #f803b7, transparent 72%); animation: sway1 11s ease-in-out infinite, pulse1 7s ease-in-out infinite; }
+        &.beam2 { left: 40%; background: linear-gradient(to bottom, #CC0597, transparent 72%); animation: sway2 14s ease-in-out infinite, pulse1 9s ease-in-out infinite; }
+        &.beam3 { left: 66%; background: linear-gradient(to bottom, #11BAFF, transparent 72%); animation: sway3 12s ease-in-out infinite, pulse1 8s ease-in-out infinite; }
+    }
+    .floor {position:absolute; bottom: -30%; left: 50%; transform: translateX(-50%); width: 120vw; height: 60vh; background: radial-gradient(ellipse at center, color-mix(in oklch, #CC0597 40%, #11BAFF), transparent 70%); filter: blur(40px); opacity: 0.4;}
+    .grain {position: absolute; inset: 0; opacity: 0.05; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); pointer-events: none;}
 }
 
-@keyframes gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+@keyframes sway1 { 0%,100% { transform: rotate(-14deg) translateX(0); } 50% { transform: rotate(-4deg) translateX(4vw); } }
+@keyframes sway2 { 0%,100% { transform: rotate(10deg) translateX(0); } 50% { transform: rotate(2deg) translateX(-4vw); } }
+@keyframes sway3 { 0%,100% { transform: rotate(-8deg) translateX(0); } 50% { transform: rotate(-18deg) translateX(3vw); } }
+@keyframes pulse1 { 0%,100% { opacity: 0.35; } 50% { opacity: 0.7; } }
+@media (prefers-reduced-motion: reduce) {
+    .beam { animation: none; }
 }

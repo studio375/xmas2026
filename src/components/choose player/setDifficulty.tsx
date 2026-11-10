@@ -24,7 +24,7 @@ export default function SetDifficulty() {
                         {option.label}
                         <span>
                             {
-                                option.value == "easy" ? 'Si aggiungerà una pallina da schivare ogni ' + GAME_CONFIG.bombEveryX[option.value] + ' collezionabili raccolti' : 'Si aggiungerà una pallina da schivare ogni collezionabile raccolto'
+                                option.value !== "hard" ? 'Si aggiungerà una pallina da schivare ogni ' + GAME_CONFIG.bombEveryX[option.value] + ' collezionabili raccolti' : 'Si aggiungerà una pallina da schivare ogni collezionabile raccolto'
                             }
                         </span>
                         {}

@@ -11,6 +11,7 @@ import Intro from './components/intro/intro';
 import CountDown from './components/countdown';
 import EntryPage from './components/intro/entrypage';
 import ChooseGuiltyPage from './components/chooseGuiltyPage';
+import Background from './components/background';
 
 function App()
 {
@@ -31,10 +32,10 @@ function App()
     const sectionOpen = menuOpen || showClue || boardOpenedByMenu || suspectedOpened;
     const [countdown, setCountdown] = useState<number>(0);
     const previousSectionOpen = useRef(sectionOpen);
-    const paused = sectionOpen || countdown !== 0;
-
+    const paused = (sectionOpen || countdown !== 0) && gameStep !== 'revealGuilty';
     useLayoutEffect(() => {
         if (previousSectionOpen.current && !sectionOpen) {
+            console.log('setto countdown');
             setCountdown(3);
         }
         previousSectionOpen.current = sectionOpen;
@@ -75,7 +76,7 @@ function App()
     }
     return (
         <div id="app">
-            
+            <Background />
             {/* ENTRY PAGE */}
             {gameStep === 'intro' && <><EntryPage /><Intro /><ChoosePlayer /></> }
             
@@ -90,7 +91,7 @@ function App()
             )}
             
             {/* PHASER GAME SECTION */}
-            {gameStep === 'start' && <div className={`absolute w-full h-full`}><PhaserGame ref={phaserRef} paused={paused} /></div>}
+            {(gameStep === 'start' || gameStep === 'revealGuilty') && <div className={`absolute w-full h-full`}><PhaserGame ref={phaserRef} paused={paused} /></div>}
             {gameStep === 'start' && countdown !== 0 && (
                 <CountDown count={countdown} setCount={setCountdown} />
             )}

@@ -2,6 +2,7 @@ import { forwardRef, useEffect, useImperativeHandle, useLayoutEffect, useRef, us
 import StartGame from './game/main';
 import { EventBus } from './game/EventBus';
 import { useStore } from './store/useStore';
+import { gsap } from './helpers/gsap';
 
 export interface IRefPhaserGame
 {
@@ -15,6 +16,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame, { paused: boolean }>(functi
     const game = useRef<Phaser.Game | null>(null);
     const [currentScene, setCurrentScene] = useState<Phaser.Scene | null>(null);
     const selectedPlayer = useStore(state => state.selectedPlayer);
+    const divRef = useRef<HTMLDivElement | null>(null);
 
     //valorizzo il ref del forward ref come un oggetto con dentro l'istanza del gioco e l'istanza della scena
     useImperativeHandle(ref, () => ({
@@ -29,6 +31,8 @@ export const PhaserGame = forwardRef<IRefPhaserGame, { paused: boolean }>(functi
         //al primo caricamento game.current prende il valore dell'istanza del gioco con tutte le impostazioni
         if (game.current === null && selectedPlayer) {
             game.current = StartGame("game-container", selectedPlayer);
+        }else if(selectedPlayer){
+            StartGame("game-container", selectedPlayer);
         }
         return () => {
             EventBus.removeListener('current-scene-ready', handleSceneReady);
@@ -45,8 +49,13 @@ export const PhaserGame = forwardRef<IRefPhaserGame, { paused: boolean }>(functi
         else game.current.resume();
     }, [paused, currentScene]);
 
+    useEffect(() => {
+        if(!divRef.current) return; 
+        gsap.to(divRef.current, { opacity: 1, duration: 1 });
+    }, []);
+
     return (
-        <div id="game-container"></div>
+        <div id="game-container" className="opacity-0" ref={divRef}></div>
     );
 
 });
