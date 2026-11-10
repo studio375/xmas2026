@@ -5,7 +5,7 @@ import ClassicText from "./classicText";
 import { EventBus } from "@/game/EventBus";
 import Image from "next/image";
 
-export default function ChooseGuiltyPopup({fromSuspected=false, onClickClose}: {fromSuspected: boolean, onClickClose?: () => void}) {
+export default function ChooseGuiltyPopup({fromSuspected=false, onClickClose = () => {}}: {fromSuspected?: boolean, onClickClose?: () => void}) {
     const { setGameStep, setShowComponents, setClueIndex, clueIndex } = useStore();
     const handleClick = () => {
         setGameStep('chooseGuilty');
