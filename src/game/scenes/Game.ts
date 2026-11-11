@@ -33,6 +33,7 @@ export class Game extends Scene
     untouchableElements:UntouchableElements;
     coords:any;
     sky: Phaser.GameObjects.Graphics;
+    isMainGame: boolean = useStore.getState().gameStep == 'start';
 
 
     constructor ()
@@ -58,19 +59,25 @@ export class Game extends Scene
             if (!this.textures.exists(ASSET_KEYS[key]) && path && !path.includes('overlay-elements')) 
                 this.load.image(ASSET_KEYS[key], path);
         });
+        var spriteImg = (this.isMainGame)?'sprite':'babbo';
+        var frameWidth = (this.selectedPlayerObject.frameWidth)?this.selectedPlayerObject.frameWidth:98;
+        var frameHeight = (this.selectedPlayerObject.frameHeight)?this.selectedPlayerObject.frameHeight:190;
+        if(!this.isMainGame){
+            frameWidth = 197;
+            frameHeight = 190;
+        }
         this.load.spritesheet(
             ASSET_KEYS.dude,
-            `/characters/${this.selectedPlayerObject.name}/${(this.selectedPlayerObject.name).toLowerCase()}-sprite.png`,
+            `/characters/${this.selectedPlayerObject.name}/${(this.selectedPlayerObject.name).toLowerCase()}-${spriteImg}.png`,
             {
-                frameWidth: (this.selectedPlayerObject.frameWidth)?this.selectedPlayerObject.frameWidth:98,
-                frameHeight: (this.selectedPlayerObject.frameHeight)?this.selectedPlayerObject.frameHeight:190
+                frameWidth,
+                frameHeight
             }
         );
     }
 
     create ()
     {
-        const isMainGame = useStore.getState().gameStep == 'start';
         var start = this.sys.scale.height - this.textures.get(ASSET_KEYS.base).getSourceImage().height;
         this.registry.set('floor-start', start);
 
@@ -101,7 +108,7 @@ export class Game extends Scene
         this.playerController.create();
 
         // camera
-        if(isMainGame){
+        if(this.isMainGame){
             this.camera.setBounds(0, -this.sys.scale.height, worldWidth, this.sys.scale.height*2, true);
             this.camera.startFollow(this.playerController.sprite, true, 1, 0.05);
         }
@@ -136,20 +143,20 @@ export class Game extends Scene
         this.livesManager = new LivesManager(this);
 
         // bombe
-        if(isMainGame){
+        if(this.isMainGame){
             const difficulty = useStore.getState().difficulty;
             this.bombManager = new BombManager(this, this.playerController.sprite, GAME_CONFIG.bombEveryX[difficulty]);
             this.bombManager.create();
         }
 
         // cubo
-        if(isMainGame){
+        if(this.isMainGame){
             this.cubeManager = new CubeManager(this, this.collectibleManager);
             this.cubeManager.create();
         }
 
         // colliders
-        if(isMainGame){ //elementi per cui prevedere un collider solo quando siamo nel gioco principale
+        if(this.isMainGame){ //elementi per cui prevedere un collider solo quando siamo nel gioco principale
             this.physics.add.collider(this.bombManager.bombs, this.floorAndPlatforms.platforms); // bomba - piattaforma
             this.physics.add.collider(this.bombManager.bombs, this.floorAndPlatforms.floor); // bomba - pavimento
             this.physics.add.collider(this.bombManager.bombs, this.cubeManager.cubes); // bomba - cubo
@@ -172,7 +179,7 @@ export class Game extends Scene
         
 
         // overlaps
-        if(isMainGame){
+        if(this.isMainGame){
             this.physics.add.overlap(
                 this.playerController.sprite,
                 this.bombManager.bombs,

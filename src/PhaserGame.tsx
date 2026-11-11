@@ -17,6 +17,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame, { paused: boolean }>(functi
     const [currentScene, setCurrentScene] = useState<Phaser.Scene | null>(null);
     const selectedPlayer = useStore(state => state.selectedPlayer);
     const divRef = useRef<HTMLDivElement | null>(null);
+    const { gameStep } = useStore();
 
     //valorizzo il ref del forward ref come un oggetto con dentro l'istanza del gioco e l'istanza della scena
     useImperativeHandle(ref, () => ({
@@ -55,7 +56,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame, { paused: boolean }>(functi
     }, []);
 
     return (
-        <div id="game-container" className="opacity-0" ref={divRef}></div>
+        <div id="game-container" className={`opacity-0 ${gameStep==='revealGuilty'&&'grayscale-50'}`} ref={divRef}></div>
     );
 
 });

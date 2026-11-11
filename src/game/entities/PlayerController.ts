@@ -24,7 +24,7 @@ export class PlayerController
         this.sprite = this.scene.physics.add.sprite(startX, this.scene.registry.get('floor-start')-startJumpHeight, ASSET_KEYS.dude).setOrigin(0, 1);
         this.sprite.setCollideWorldBounds(true);
         this.sprite.setScale(0.5);
-        //this.sprite.setGravityY(GAME_CONFIG.playerGravityY);
+        this.sprite.setGravityY(GAME_CONFIG.playerGravityY);
         this.sprite.body?.updateFromGameObject();
 
         this.createAnimations();
@@ -72,30 +72,38 @@ export class PlayerController
 
     update()
     {
-        if (this.cursors.left.isDown || this.keyA.isDown)
-        {
-            this.sprite.setVelocityX(-GAME_CONFIG.playerSpeed);
-            this.sprite.anims.play('left', true);
-        }
-        else if (this.cursors.right.isDown || this.keyD.isDown)
-        {
-            this.sprite.setVelocityX(GAME_CONFIG.playerSpeed);
+        var horizontalSpeed = GAME_CONFIG.playerSpeed;
+        if(!this.isMainGame) horizontalSpeed += 100;
+        if(this.isMainGame){
+            if (this.cursors.left.isDown || this.keyA.isDown)
+            {
+                this.sprite.setVelocityX(-horizontalSpeed);
+                this.sprite.anims.play('left', true);
+            }
+            else if (this.cursors.right.isDown || this.keyD.isDown)
+            {
+                this.sprite.setVelocityX(horizontalSpeed);
+                this.sprite.anims.play('right', true);
+            }
+            else if ((this.cursors.down.isDown || this.keyS.isDown) && this.sprite.body && !this.sprite.body.blocked.down) {
+                this.sprite.setVelocityX(0);
+                this.sprite.setVelocityY(500);
+                this.sprite.anims.play('down', true);
+            }
+            else
+            {
+                this.sprite.setVelocityX(0);
+                if (this.sprite.anims.currentAnim?.key !== 'turn') this.sprite.anims.play('turn');
+            }
+
+            if ((this.cursors.up.isDown || this.cursors.space.isDown || this.keyW.isDown) && this.sprite.body?.blocked.down)
+            {
+                this.sprite.setVelocityY(GAME_CONFIG.jumpVelocity);
+            }
+        }else{
+            this.sprite.setVelocityX(horizontalSpeed);
             this.sprite.anims.play('right', true);
         }
-        else if ((this.cursors.down.isDown || this.keyS.isDown) && this.sprite.body && !this.sprite.body.blocked.down) {
-            this.sprite.setVelocityX(0);
-            this.sprite.setVelocityY(500);
-            this.sprite.anims.play('down', true);
-        }
-        else
-        {
-            this.sprite.setVelocityX(0);
-            if (this.sprite.anims.currentAnim?.key !== 'turn') this.sprite.anims.play('turn');
-        }
-
-        if ((this.cursors.up.isDown || this.cursors.space.isDown || this.keyW.isDown) && this.sprite.body?.blocked.down)
-        {
-            this.sprite.setVelocityY(GAME_CONFIG.jumpVelocity);
-        }
+        
     }
 }
