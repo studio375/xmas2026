@@ -12,6 +12,7 @@ import CountDown from './components/countdown';
 import EntryPage from './components/intro/entrypage';
 import ChooseGuiltyPage from './components/chooseGuiltyPage';
 import Background from './components/background';
+import { gsap } from './helpers/gsap';
 
 function App()
 {
@@ -33,9 +34,9 @@ function App()
     const [countdown, setCountdown] = useState<number>(0);
     const previousSectionOpen = useRef(sectionOpen);
     const paused = (sectionOpen || countdown !== 0) && gameStep !== 'revealGuilty';
+    const phaserContainerRef = useRef<HTMLDivElement | null>(null);
     useLayoutEffect(() => {
         if (previousSectionOpen.current && !sectionOpen) {
-            console.log('setto countdown');
             setCountdown(3);
         }
         previousSectionOpen.current = sectionOpen;
@@ -65,6 +66,17 @@ function App()
         }
     }), []);
 
+    useEffect(() => {
+        if (!phaserContainerRef.current) return;
+        const handleEscapeDone = () => {
+            gsap.to(phaserContainerRef.current, { opacity: 0, duration: 1.5, delay: 0.5 });
+        }
+        EventBus.on('escape-done', handleEscapeDone);
+        return () => {
+            EventBus.removeListener('escape-done', handleEscapeDone);
+        }
+    }, [gameStep]);
+
     const handleCloseBoard = (openSuspects = false) => {
         const newIndex = showClue ? clueIndex + 1 : clueIndex;
         setShowClue(false); 
@@ -91,7 +103,7 @@ function App()
             )}
             
             {/* PHASER GAME SECTION */}
-            {(gameStep === 'start' || gameStep === 'revealGuilty') && <div className={`absolute w-full h-full`}><PhaserGame ref={phaserRef} paused={paused} /></div>}
+            {(gameStep === 'start' || gameStep === 'revealGuilty') && <div ref={phaserContainerRef} className={`absolute w-full h-full`}><PhaserGame ref={phaserRef} paused={paused} /></div>}
             {gameStep === 'start' && countdown !== 0 && (
                 <CountDown count={countdown} setCount={setCountdown} />
             )}

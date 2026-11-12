@@ -3,6 +3,7 @@ import { Character } from '@/helpers/gameData';
 import { ASSET_KEYS } from '@/helpers/assets';
 import { GAME_CONFIG } from '@/helpers/gameConfig';
 import { useStore } from '@/store/useStore';
+import { EventBus } from '../EventBus';
 
 
 export class PlayerController
@@ -16,7 +17,7 @@ export class PlayerController
     isMainGame = useStore.getState().gameStep == 'start';
     lastSceneAction: 'sneaky' | 'stopped' | 'startRun' = 'sneaky';
 
-    constructor(private scene: Phaser.Scene, private character: Character) {}
+    constructor(private scene: Phaser.Scene, private character: Character, private game: Phaser.Game) {}
 
     create()
     {
@@ -123,6 +124,13 @@ export class PlayerController
             if(this.lastSceneAction === 'startRun'  ){
                 this.sprite.setVelocityX(horizontalSpeed);
                 this.sprite.anims.play('right', true);
+            }
+
+            if(!this.sprite.body) return;
+            if(this.sprite?.body?.position.x > window.innerWidth) {
+                this.lastSceneAction = 'stopped';
+                this.game.pause();
+                EventBus.emit('escape-done');
             }
         }
         

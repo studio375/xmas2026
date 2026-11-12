@@ -104,7 +104,7 @@ export class Game extends Scene
         this.untouchableElements.create();
         
         // omino
-        this.playerController = new PlayerController(this, this.selectedPlayerObject);
+        this.playerController = new PlayerController(this, this.selectedPlayerObject, this.game);
         this.playerController.create();
 
         // camera
@@ -231,7 +231,7 @@ export class Game extends Scene
 
     update()
     {
-        if (!this.gameOver) this.playerController.update();
+        if (!this.gameOver) this.playerController.update();;
     }
 
     hitBomb()
