@@ -14,6 +14,7 @@ export class PlayerController
     keyD: Phaser.Input.Keyboard.Key;
     keyW: Phaser.Input.Keyboard.Key;
     isMainGame = useStore.getState().gameStep == 'start';
+    lastSceneAction: 'sneaky' | 'stopped' | 'startRun' = 'sneaky';
 
     constructor(private scene: Phaser.Scene, private character: Character) {}
 
@@ -36,6 +37,16 @@ export class PlayerController
         this.keyS = keyboard.addKey(Input.Keyboard.KeyCodes.S);
         this.keyD = keyboard.addKey(Input.Keyboard.KeyCodes.D);
         this.keyW = keyboard.addKey(Input.Keyboard.KeyCodes.W);
+
+
+        if(!this.isMainGame){
+            setTimeout(() => {
+                this.lastSceneAction = 'stopped';
+                setTimeout(() => {
+                    this.lastSceneAction = 'startRun';
+                }, 1000);
+            }, 2000);
+        }
     }
 
     private createAnimations()
@@ -101,8 +112,18 @@ export class PlayerController
                 this.sprite.setVelocityY(GAME_CONFIG.jumpVelocity);
             }
         }else{
-            this.sprite.setVelocityX(horizontalSpeed);
-            this.sprite.anims.play('right', true);
+            if(this.lastSceneAction === 'sneaky'){
+                this.sprite.setVelocityX(horizontalSpeed/4);
+                this.sprite.anims.play('right', true);
+            }
+            if(this.lastSceneAction === 'stopped'){
+                this.sprite.setVelocityX(0);
+                this.sprite.anims.play('turn');
+            }
+            if(this.lastSceneAction === 'startRun'  ){
+                this.sprite.setVelocityX(horizontalSpeed);
+                this.sprite.anims.play('right', true);
+            }
         }
         
     }
