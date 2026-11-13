@@ -62,7 +62,7 @@ export class Game extends Scene
         var spriteImg = (this.isMainGame)?'sprite':'babbo';
         var frameWidth = (this.selectedPlayerObject.frameWidth)?this.selectedPlayerObject.frameWidth:98;
         var frameHeight = (this.selectedPlayerObject.frameHeight)?this.selectedPlayerObject.frameHeight:190;
-        if(!this.isMainGame){
+        if(!this.isMainGame && this.selectedPlayerObject.name === 'Rams'){
             frameWidth = 197;
             frameHeight = 190;
         }

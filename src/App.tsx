@@ -14,6 +14,7 @@ import ChooseGuiltyPage from './components/chooseGuiltyPage';
 import Background from './components/background';
 import { gsap } from './helpers/gsap';
 import GameResult from './components/gameResult';
+import { GAME_DATA } from './helpers/gameData';
 
 function App()
 {

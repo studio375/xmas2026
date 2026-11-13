@@ -32,7 +32,7 @@ export default function SuspectedSection({onClose}: {onClose: () => void}){
             aria-modal="true"
             aria-labelledby="suspected-title"
             aria-describedby="suspected-instructions"
-            className="suspected-section fixed inset-0 z-10"
+            className="suspected-section fixed inset-0 z-12"
             onKeyDown={event => {
                 if (event.key === 'Escape') {
                     event.preventDefault();

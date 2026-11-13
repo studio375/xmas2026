@@ -11,7 +11,7 @@ export default function GameOverlay(){
         gameStep: state.gameStep
     })));   
     return <>
-        <div className="fixed top-0 left-0 w-screen p-[16px] flex items-start justify-between pointer-events-none">
+        <div className="fixed top-0 left-0 w-screen p-[16px] flex items-start justify-between pointer-events-none z-11">
             {gameStep === 'start' ? <ClientLivesManager manageRecovered={true} />:<div></div>}    
             <div className="flex items-start justify-end gap-2">
                 {gameStep === 'start' && <div className="flex flex-col items-end gap-1">

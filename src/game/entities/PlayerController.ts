@@ -85,7 +85,7 @@ export class PlayerController
     update()
     {
         var horizontalSpeed = GAME_CONFIG.playerSpeed;
-        if(!this.isMainGame) horizontalSpeed += 100;
+        if(!this.isMainGame) horizontalSpeed += 200;
         if(this.isMainGame){
             if (this.cursors.left.isDown || this.keyA.isDown)
             {

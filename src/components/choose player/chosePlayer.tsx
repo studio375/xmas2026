@@ -28,8 +28,8 @@ export default function ChoosePlayer(){
     const handleChoose = () => {
         const suspects = GAME_DATA.characters.filter(candidate => candidate.id !== character.id);
         if (suspects.length === 0) throw new Error('Nessun sospettato disponibile per la partita.');
-        // const guilty = suspects[Math.floor(Math.random() * suspects.length)];
-        const guilty = suspects[0];
+        const guilty = suspects[Math.floor(Math.random() * suspects.length)];
+        // const guilty = suspects[0];
         console.log('Guilty character:', guilty);
         const currentClues: ClueVariable[] = [];
         const newUsedClues:number[] = [];
@@ -42,8 +42,11 @@ export default function ChoosePlayer(){
                 newUsedClues.push(newClue.id);
             }
         }
-        currentClues.sort((a,b) => a.exclusivityLevel - b.exclusivityLevel);
 
+        currentClues.sort((a,b) => {
+            return (a.exclusivityLevel ?? 0) - (b.exclusivityLevel ?? 0);
+        });
+        console.log('Sorted clues:', currentClues);
         var tml = gsap.timeline();
         tml.to(innerRef.current, { opacity: 0, duration: 0.5 })
            .then(() => {

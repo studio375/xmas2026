@@ -31,7 +31,7 @@ export default function ClueBoard({handleClickButton, handleGoToSuspects, opened
         if (hasNewClue) setAttached(true);
         setExpandedIndex(null);
     };
-    return <div role="dialog" aria-modal="true" aria-label="Lavagna degli indizi" className="clue-board-screen fixed inset-0 bg-[#000000aa] z-10">
+    return <div role="dialog" aria-modal="true" aria-label="Lavagna degli indizi" className="clue-board-screen fixed inset-0 bg-[#000000aa] z-12">
         <Board
             clues={clues}
             visibleCount={clueIndex + ((hasNewClue && attached) ? 1 : 0)}
