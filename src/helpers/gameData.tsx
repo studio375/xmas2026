@@ -16,9 +16,20 @@ export interface ClueVariable {
     exclusivityLevel:number
 }
 
+interface GameResultVariable {
+    win : GameResultTextValue,
+    lose : GameResultTextValue
+}
+
+interface GameResultTextValue {
+    title: string,
+    paragraph: string
+}
+
 interface GameData{
     characters:Character[],
-    clues: ClueVariable[]
+    clues: ClueVariable[],
+    gameResultText: GameResultVariable,
 }
 
 export const GAME_DATA:GameData = {
@@ -109,5 +120,16 @@ export const GAME_DATA:GameData = {
         {id: 11, text:'Placeholder Clue', suspected: [1,2,3,4,5,6,7,8,9], exclusivityLevel: 1},
         {id: 12, text:'Placeholder Clue', suspected: [1,2,3,4,5,6,7,8,9], exclusivityLevel: 1},
         {id: 13, text:'Placeholder Clue', suspected: [1,2,3,4,5,6,7,8,9], exclusivityLevel: 1},
-    ]
+    ],
+
+    gameResultText:{
+        win: {
+            title: 'Complimenti, hai vinto!',
+            paragraph: 'Complimenti! Sei riuscito a risolvere il mistero.'
+        },
+        lose: {
+            title: 'Ci dispiace, hai perso!',
+            paragraph: 'Mi dispiace! Non sei riuscito a risolvere il mistero.'
+        }
+    }
 }

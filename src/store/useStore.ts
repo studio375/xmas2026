@@ -4,7 +4,7 @@ import { create } from "zustand";
 
 export type SuspectStatus = 'neutral' | 'excluded' | 'suspected';
 type GameOverlay = 'clues' | 'suspected';
-type GameStep = 'intro' | 'start' | 'chooseGuilty' | 'revealGuilty';
+type GameStep = 'intro' | 'start' | 'chooseGuilty' | 'revealGuilty' | 'gameResult';
 
 interface GameSession {
    gameStep: GameStep;
@@ -69,6 +69,8 @@ export const useStore = create<GameState>((set) => ({
    setGameStep: (gameStep) => set({gameStep}),
    restartGame: () => set(state => ({
       ...initialState,
+      guilty: state.guilty,
+      selectedGuilty: state.selectedGuilty,
       selectedPlayer: state.guilty,
       gameStep: 'revealGuilty',
    })),

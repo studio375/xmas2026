@@ -13,12 +13,13 @@ import EntryPage from './components/intro/entrypage';
 import ChooseGuiltyPage from './components/chooseGuiltyPage';
 import Background from './components/background';
 import { gsap } from './helpers/gsap';
+import GameResult from './components/gameResult';
 
 function App()
 {
     //  References to the PhaserGame component (game and scene are exposed)
     const phaserRef = useRef<IRefPhaserGame | null>(null);
-    const {gameStep, clues, clueIndex, setClueIndex, showComponents, setShowComponents, menuOpen} = useStore(useShallow(state => ({
+    const {gameStep, clues, clueIndex, setClueIndex, showComponents, setShowComponents, menuOpen, setGameStep} = useStore(useShallow(state => ({
         gameStep: state.gameStep,
         clues: state.clues,
         clueIndex: state.clueIndex,
@@ -26,6 +27,7 @@ function App()
         showComponents: state.showComponents,
         setShowComponents: state.setShowComponents,
         menuOpen: state.menuOpen,
+        setGameStep: state.setGameStep,
     })));
     const [showClue, setShowClue] = useState(false);
     const boardOpenedByMenu = showComponents.includes('clues');
@@ -69,7 +71,9 @@ function App()
     useEffect(() => {
         if (!phaserContainerRef.current) return;
         const handleEscapeDone = () => {
-            gsap.to(phaserContainerRef.current, { opacity: 0, duration: 1.5, delay: 0.5 });
+            var tml = gsap.timeline();
+            tml.to(phaserContainerRef.current, { opacity: 0, duration: 1.5, delay: 0.5 })
+               .then(() => setGameStep('gameResult'));
         }
         EventBus.on('escape-done', handleEscapeDone);
         return () => {
@@ -112,7 +116,10 @@ function App()
             {gameStep === 'chooseGuilty' && <ChooseGuiltyPage />}
 
             {/* GAME OVERLAY */}
-            {gameStep !== 'intro' && <GameOverlay />}
+            {(gameStep === 'start' || gameStep === 'chooseGuilty')  && <GameOverlay />}
+
+            {/* GAME RESULT PAGE */}
+            {gameStep === 'gameResult' && <GameResult />}
         </div>
     )
 }
