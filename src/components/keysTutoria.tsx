@@ -11,7 +11,7 @@ export default function KeysTutorial({ onClick }: { onClick: () => void }) {
     };
     return (
         <div ref={ref} className="bg-[#000000cc] flex flex-col gap-3 justify-center items-center absolute w-full h-full z-9999">
-            <h2>Qui anita ci creerà un bell'overlay con le istruzioni dei tasti</h2>
+            <h2>Qui anita ci creerà un bellissimo overlay con le istruzioni dei tasti</h2>
             <Button onClick={handleClick}>Ho capito</Button>
         </div>
     );
