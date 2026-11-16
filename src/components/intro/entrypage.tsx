@@ -2,6 +2,7 @@ import Button from "../button";
 import { useEffect, useRef } from "react";
 import { gsap, SplitText } from "../../helpers/gsap";
 import Background from "../background";
+import Image from "next/image";
 
 export default function EntryPage() {
     const ref = useRef<any>(null);
@@ -37,13 +38,16 @@ export default function EntryPage() {
         } });
     }
     return (
-        <div ref={ref} className="classic-bg w-screen h-screen flex flex-col items-center justify-center absolute z-100 gap-4">
+        <div ref={ref} className="classic-bg w-screen h-screen flex flex-col items-center justify-center absolute z-101 gap-4">
             <Background />  
             <div className="h-22 flex items-end">
                 <h1 ref={titleRef} className="font-swash text-[100px]/[95px] text-center whitespace-nowrap opacity-100 [&>.single-char]:opacity-0">Chi ha rapito Babbo Natale?</h1>
             </div>
-            <h2 className="font-swash text-[40px] text-center mt-3 opacity-0" ref={subtitleRef}>Raccogli tutti quanti gli oggetti nascosti, scopri gli indizi e risolvi il mistero!<br />E ovviamente stai attento a schivare le palline!</h2>
-            <Button className="mt-4 opacity-0" onClick={handleStart} ref={buttonRef}>Inizia</Button>
+            <div className="flex justify-center items-center flex-col mt-0 opacity-0 gap-3" ref={subtitleRef}>
+                <Image src="/assets/logo-375.svg" alt="Studio375 Logo" width={50} height={60} className="w-5 h-6 object-contain" />
+                <h2 className="font-swash text-xl text-center">By Studio375</h2>
+            </div>
+            <Button className="mt-4 opacity-0" onClick={handleStart} ref={buttonRef}>Gioca</Button>
         </div>
     );
 }

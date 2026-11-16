@@ -16,7 +16,6 @@ export class BombManager
     create()
     {
         this.bombs = this.scene.physics.add.group();
-        this.addBomb(true);
     }
 
     addBomb(isFirst: boolean = false)

@@ -31,7 +31,16 @@ interface GameResultTextValue {
 interface GameData{
     characters:Character[],
     clues: ClueVariable[],
+    tutorialText: {
+        title: string,
+        subtitle: string,
+        text: string
+    }
     gameResultText: GameResultVariable,
+    clousureText: {
+        title: string,
+        paragraph: string
+    }
 }
 
 export const GAME_DATA:GameData = {
@@ -118,6 +127,19 @@ export const GAME_DATA:GameData = {
     //cri - 9
     clues: DEFINITIVE_CLUES,
 
+    tutorialText: {
+        title: 'Come si gioca',
+        subtitle: 'In questo gioco il detective sarai tu!',
+        text: `<ul>
+                    <li>- Leggi le descrizioni di ogni personaggio, fai attenzione ad ogni dettaglio</li>
+                    <li>- Raccogli tutti gli oggetti nascosti</li>
+                    <li>- Schiva le palline...sono cattive!</li>
+                    <li>- Se perdi una vita, raccogli 3 stelline per recuperarla</li>
+                    <li>- Scopri gli indizi</li>
+                    <li>- Risolvi il mistero</li>
+                </ul>`
+    },
+
     gameResultText:{
         win: {
             title: 'Complimenti, hai vinto!',
@@ -127,5 +149,10 @@ export const GAME_DATA:GameData = {
             title: 'Ci dispiace, hai perso!',
             paragraph: 'Mi dispiace! Non sei riuscito a risolvere il mistero.'
         }
+    },
+
+    clousureText: {
+        title: 'Grazie per aver giocato!',
+        paragraph: 'Speriamo che risolvere questo mistero ti abbia strappato un sorriso.<br>Il team di Studio375 ti augura buone feste!'
     }
 }

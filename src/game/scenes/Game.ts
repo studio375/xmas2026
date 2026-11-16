@@ -227,11 +227,15 @@ export class Game extends Scene
 
         this.dynamicBg();
         EventBus.emit('current-scene-ready', this);
+        EventBus.on('close-keys-tutorial', () => {
+            this.bombManager.addBomb(true);
+            this.playerController.startMove = true;
+        });
     }
 
     update()
     {
-        if (!this.gameOver) this.playerController.update();;
+        if (!this.gameOver) this.playerController.update();
     }
 
     hitBomb()

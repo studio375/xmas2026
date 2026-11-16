@@ -4,7 +4,7 @@ import { create } from "zustand";
 
 export type SuspectStatus = 'neutral' | 'excluded' | 'suspected';
 type GameOverlay = 'clues' | 'suspected';
-type GameStep = 'intro' | 'start' | 'chooseGuilty' | 'revealGuilty' | 'gameResult';
+type GameStep = 'intro' | 'start' | 'chooseGuilty' | 'revealGuilty' | 'gameResult' | 'closure';
 
 interface GameSession {
    gameStep: GameStep;

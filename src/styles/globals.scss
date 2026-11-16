@@ -11,6 +11,14 @@
     --font-fuzzy: var(--font-fuzzy);
     --font-swash: var(--font-swash);
 
+
+    //testi
+    --text-xxl: 48px;
+    --text-xl: 40px;
+    --text-l: 32px;
+    --text-m: 24px;
+    --text-s: 18px;
+
     //responsive
     // --breakpoint-2xl: 2000px;
     // --breakpoint-xl: 1500px;
@@ -20,6 +28,22 @@
     // --breakpoint-s: 768px;
     // --breakpoint-xs: 501px;
     // --breakpoint-xxs: 400px;
+}
+
+.text-xxl {
+    font-size: var(--text-xxl);
+}
+.text-xl {
+    font-size: var(--text-xl);
+}
+.text-l {
+    font-size: var(--text-l);
+}
+.text-m {
+    font-size: var(--text-m);
+}
+.text-s {
+    font-size: var(--text-s);
 }
 
 body {
@@ -543,7 +567,7 @@ body {
     aspect-ratio: 355 / 413;
     max-width: 100%;
     transition: transform 200ms ease;
-    filter: drop-shadow(2px 4px 3px #47352640);
+    box-shadow:2px 4px 6px 0px #47352640;
 
     img {
         width: 100%;
@@ -556,7 +580,7 @@ body {
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 3%;
+    bottom: 6%;
     font-size: clamp(11px, 2.2dvh, 23px);
     line-height: 1.1;
 }

@@ -4,9 +4,10 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import NarrationText from "./narrationText";
 import { GAME_DATA } from "@/helpers/gameData";
+import Button from "./button";
 
 export default function GameResult() {
-    const {selectedGuilty, guilty} = useStore();
+    const {selectedGuilty, guilty, setGameStep} = useStore();
     const ref = useRef<HTMLDivElement | null>(null);
     const refImage = useRef<HTMLImageElement | null>(null);
     const refPopup = useRef<HTMLDivElement | null>(null);
@@ -19,12 +20,18 @@ export default function GameResult() {
         tml.to(ref.current, { opacity: 1, duration: 1 })
            .to(refPopup.current, { opacity: 1, duration: 1 });
     }, []);
+    const handleButtonClick = () => {
+        gsap.to(ref.current, { opacity: 0, duration: 1 }).then(() => {
+            setGameStep("closure");
+        });
+    };
     return (
         <div ref={ref} className="absolute w-full h-full opacity-0 left-0 top-0 flex justify-center items-center">
             <Image ref={refImage} className="absolute w-full h-full object-cover" src={`/assets/characters/${selectedGuilty?.name}/${selectedGuilty?.name.toLocaleLowerCase()}-${isWin ? "win" : "lose"}.png`} width={1920} height={1080} alt="" />
-            <div ref={refPopup} className="absolute top-1/2 left-1/2 -translate-1/2 w-[50vw] p-3 bg-[#ffffffaa] rounded-[20px] flex flex-col items-center gap-2 opacity-0">
+            <div ref={refPopup} className="absolute top-1/2 left-1/2 -translate-1/2 w-[50vw] p-3 bg-[#ffffffd6] rounded-[20px] flex flex-col items-center gap-2 opacity-0">
                 <NarrationText AddClassName="text-black text-[50px]">{popupText.title}</NarrationText>
                 <NarrationText AddClassName="text-black text-[30px]">{popupText.paragraph}</NarrationText>
+                <Button onClick={handleButtonClick}>Avanti</Button>
             </div>
         </div>
     );

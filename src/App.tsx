@@ -15,6 +15,9 @@ import Background from './components/background';
 import { gsap } from './helpers/gsap';
 import GameResult from './components/gameResult';
 import { GAME_DATA } from './helpers/gameData';
+import ClosurePage from './components/closurePage';
+import Tutorial from './components/intro/tutorial';
+import KeysTutorial from './components/keysTutoria';
 
 function App()
 {
@@ -36,8 +39,9 @@ function App()
     const sectionOpen = menuOpen || showClue || boardOpenedByMenu || suspectedOpened;
     const [countdown, setCountdown] = useState<number>(0);
     const previousSectionOpen = useRef(sectionOpen);
-    const paused = (sectionOpen || countdown !== 0) && gameStep !== 'revealGuilty';
     const phaserContainerRef = useRef<HTMLDivElement | null>(null);
+    const [keysTutorial, setKeysTutorial] = useState<boolean>(true);
+    const paused = (sectionOpen || countdown !== 0) && gameStep !== 'revealGuilty';
     useLayoutEffect(() => {
         if (previousSectionOpen.current && !sectionOpen) {
             setCountdown(3);
@@ -71,6 +75,9 @@ function App()
 
     useEffect(() => {
         if (!phaserContainerRef.current) return;
+        if(gameStep == 'start'){
+            gsap.to(phaserContainerRef.current, { opacity: 1, duration: 0.5 });
+        }
         const handleEscapeDone = () => {
             var tml = gsap.timeline();
             tml.to(phaserContainerRef.current, { opacity: 0, duration: 1.5, delay: 0.5 })
@@ -91,11 +98,16 @@ function App()
     const handleCloseSuspects = () => {
         setShowComponents(showComponents.filter(component => component !== 'suspected'));
     }
+
+    const handleCloseKeysTutorial = () => {
+        setKeysTutorial(false);
+        EventBus.emit('close-keys-tutorial');
+    }
     return (
         <div id="app">
             <Background />
             {/* ENTRY PAGE */}
-            {gameStep === 'intro' && <><EntryPage /><Intro /><ChoosePlayer /></> }
+            {gameStep === 'intro' && <><EntryPage /><Tutorial /><Intro /><ChoosePlayer /></> }
             
             {/* SUSPECTED SECTION AND CLUE BOARD */}
             {(gameStep !== 'intro') && suspectedOpened && <SuspectedSection onClose={handleCloseSuspects} />}
@@ -108,7 +120,7 @@ function App()
             )}
             
             {/* PHASER GAME SECTION */}
-            {(gameStep === 'start' || gameStep === 'revealGuilty') && <div ref={phaserContainerRef} className={`absolute w-full h-full`}><PhaserGame ref={phaserRef} paused={paused} /></div>}
+            {(gameStep === 'start' || gameStep === 'revealGuilty') && <div ref={phaserContainerRef} className={`absolute w-full h-full opacity-0`}>{keysTutorial && <KeysTutorial onClick={handleCloseKeysTutorial} /> }<PhaserGame ref={phaserRef} paused={paused} /></div>}
             {gameStep === 'start' && countdown !== 0 && (
                 <CountDown count={countdown} setCount={setCountdown} />
             )}
@@ -121,6 +133,9 @@ function App()
 
             {/* GAME RESULT PAGE */}
             {gameStep === 'gameResult' && <GameResult />}
+
+            {/* CLOSURE PAGE */}
+            {gameStep === 'closure' && <ClosurePage />}
         </div>
     )
 }

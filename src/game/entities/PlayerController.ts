@@ -16,6 +16,7 @@ export class PlayerController
     keyW: Phaser.Input.Keyboard.Key;
     isMainGame = useStore.getState().gameStep == 'start';
     lastSceneAction: 'sneaky' | 'stopped' | 'startRun' = 'sneaky';
+    startMove: boolean = false;
 
     constructor(private scene: Phaser.Scene, private character: Character, private game: Phaser.Game) {}
 
@@ -87,6 +88,10 @@ export class PlayerController
         var horizontalSpeed = GAME_CONFIG.playerSpeed;
         if(!this.isMainGame) horizontalSpeed += 200;
         if(this.isMainGame){
+            if(!this.startMove){
+                if (this.sprite.anims.currentAnim?.key !== 'turn') this.sprite.anims.play('turn');
+                return;
+            } 
             if (this.cursors.left.isDown || this.keyA.isDown)
             {
                 this.sprite.setVelocityX(-horizontalSpeed);
