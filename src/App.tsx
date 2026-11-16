@@ -120,7 +120,7 @@ function App()
             )}
             
             {/* PHASER GAME SECTION */}
-            {(gameStep === 'start' || gameStep === 'revealGuilty') && <div ref={phaserContainerRef} className={`absolute w-full h-full opacity-0`}>{keysTutorial && <KeysTutorial onClick={handleCloseKeysTutorial} /> }<PhaserGame ref={phaserRef} paused={paused} /></div>}
+            {(gameStep === 'start' || gameStep === 'revealGuilty') && <div ref={phaserContainerRef} className={`absolute w-full h-full ${gameStep === 'start' ? 'opacity-0' : ''}`}>{keysTutorial && <KeysTutorial onClick={handleCloseKeysTutorial} /> }<PhaserGame ref={phaserRef} paused={paused} /></div>}
             {gameStep === 'start' && countdown !== 0 && (
                 <CountDown count={countdown} setCount={setCountdown} />
             )}
