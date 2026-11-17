@@ -5,6 +5,7 @@ const nextConfig = {
     output: 'export',
     distDir: 'dist',
     images: { unoptimized: true },
+    experimental: { agentUpgrade: 'security' },
     turbopack: { root: fileURLToPath(new URL('.', import.meta.url)) },
 };
 
